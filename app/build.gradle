@@ -28,6 +28,7 @@ dependencies {
 
     // Non-default dependencies
     implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-database:17.0.0'
 }
 
 // Non-default plugins
