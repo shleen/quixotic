@@ -1,7 +1,9 @@
 package com.shleen.quixotic;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +13,11 @@ import java.util.List;
 
 public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHolder> {
     private List<Word> words;
+    private static onWordClickListener listener;
 
-    public WordListAdaptor(List<Word> words) {
+    public WordListAdaptor(List<Word> words, onWordClickListener listener) {
         this.words = words;
+        this.listener = listener;
     }
 
     @NonNull
@@ -35,12 +39,22 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
         return words.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView txtword, txtdefinition;
+
         public ViewHolder(View itemView) {
             super(itemView);
-            txtword=(TextView)itemView.findViewById(R.id.list_word);
-            txtdefinition=(TextView)itemView.findViewById(R.id.list_definiton);
+
+            txtword = (TextView) itemView.findViewById(R.id.list_word);
+            txtdefinition = (TextView) itemView.findViewById(R.id.list_definiton);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            listener.onWordClicked(v, getLayoutPosition());
+
         }
     }
 }

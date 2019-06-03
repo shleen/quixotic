@@ -1,10 +1,15 @@
 package com.shleen.quixotic;
 
+import android.content.Intent;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
 
 import com.google.firebase.database.DataSnapshot;
@@ -13,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +66,18 @@ public class MainActivity extends AppCompatActivity {
                     words.add(word);
                 }
 
-                wordListAdaptor = new WordListAdaptor(words);
+                wordListAdaptor = new WordListAdaptor(words, new onWordClickListener() {
+                    @Override
+                    public void onWordClicked(View v, int position) {
+
+                        // Navigate to word-specific page
+                        Intent i = new Intent(v.getContext(), WordActivity.class);
+                        i.putExtra("WORD", words.get(position));
+
+                        startActivity(i);
+
+                    }
+                });
                 recyclerView.setAdapter(wordListAdaptor);
 
             }
