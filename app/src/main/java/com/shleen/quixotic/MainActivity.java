@@ -48,11 +48,13 @@ public class MainActivity extends AppCompatActivity {
                   .continueWith(new Continuation<HttpsCallableResult, String>() {
                       @Override
                       public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-                          // This continuation runs on either success or failure, but if the task
-                          // has failed then getResult() will throw an Exception which will be
-                          // propagated down.
+                          // Clear edt_add
+                          edt_add.setText("");
+
+                          // Redirect to HomeActivity
                           goToWords(v);
 
+                          // Return result
                           String result = (String) task.getResult().getData();
                           return result;
                     }
