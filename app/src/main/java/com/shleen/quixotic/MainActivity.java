@@ -20,6 +20,7 @@ import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     Typeface BUTLER_REG;
     TextView txt_word_count;
+
+    List<Word> words;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Set typeface for edt_add
         edt_add.setTypeface(BUTLER_REG);
+
+        // Pre-load words
+        WordDataHolder.getInstance().setData();
+
+        words = WordDataHolder.getInstance().getData();
     }
 
     public void goToWords(View v) {
@@ -75,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
                   .continueWith(new Continuation<HttpsCallableResult, String>() {
                       @Override
                       public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                          // Re-fetch words
+                          WordDataHolder.getInstance().setData();
+
                           // Clear edt_add
                           edt_add.setText("");
 
