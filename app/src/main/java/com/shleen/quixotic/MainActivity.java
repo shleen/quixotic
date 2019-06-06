@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void addWord(View v) {
+    public void addWord(final View v) {
         String word = edt_add.getText().toString();
 
         mFunctions = FirebaseFunctions.getInstance();
@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
                           // This continuation runs on either success or failure, but if the task
                           // has failed then getResult() will throw an Exception which will be
                           // propagated down.
+                          goToWords(v);
+
                           String result = (String) task.getResult().getData();
                           return result;
                     }

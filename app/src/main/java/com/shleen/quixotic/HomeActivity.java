@@ -39,7 +39,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+
         ref.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -78,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                // TODO: Handle database error
             }
         });
     }
