@@ -31,9 +31,23 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        wordListAdaptor = new WordListAdaptor(words, new onWordClickListener() {
+            @Override
+            public void onWordClicked(View v, int position) {
+
+                // Navigate to word-specific page
+                Intent i = new Intent(v.getContext(), WordActivity.class);
+                i.putExtra("WORD", words.get(position));
+
+                startActivity(i);
+
+            }
+        });
+
         recyclerView = (RecyclerView) findViewById(R.id.word_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(wordListAdaptor);
 
         loadData();
     }
@@ -44,6 +58,8 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                words.clear();
 
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     // Create array of definitions
@@ -61,20 +77,7 @@ public class HomeActivity extends AppCompatActivity {
 
                     words.add(word);
                 }
-
-                wordListAdaptor = new WordListAdaptor(words, new onWordClickListener() {
-                    @Override
-                    public void onWordClicked(View v, int position) {
-
-                        // Navigate to word-specific page
-                        Intent i = new Intent(v.getContext(), WordActivity.class);
-                        i.putExtra("WORD", words.get(position));
-
-                        startActivity(i);
-
-                    }
-                });
-                recyclerView.setAdapter(wordListAdaptor);
+                wordListAdaptor.notifyDataSetChanged();
 
             }
 
