@@ -7,19 +7,31 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btn_words"
+    <RelativeLayout
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="See Words"
-        android:onClick="goToWords"/>
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:background="@color/colorDarkest">
+
+        <TextView
+            android:id="@+id/txt_word_count"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="14sp"
+            android:text=" words added."
+            android:gravity="center"
+            android:textColor="@color/colorLightest"
+            android:onClick="goToWords" />
+
+    </RelativeLayout>
 
     <EditText
         android:id="@+id/edt_add"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginTop="50dp"
-        android:layout_below="@id/btn_words"/>
+        android:layout_below="@id/top_bar"/>
 
     <Button
         android:id="@+id/btn_add"
