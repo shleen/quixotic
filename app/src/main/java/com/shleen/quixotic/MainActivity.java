@@ -1,91 +1,60 @@
 package com.shleen.quixotic;
 
 import android.content.Intent;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
+import android.widget.EditText;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference("words");
+    EditText edt_add;
 
-    private RecyclerView recyclerView;
-    private WordListAdaptor wordListAdaptor;
-
-    private List<Word> words = new ArrayList<>();
+    private FirebaseFunctions mFunctions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView = (RecyclerView) findViewById(R.id.word_list);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        loadData();
+        edt_add = (EditText) findViewById(R.id.edt_add);
     }
 
-    private void loadData() {
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    public void goToWords(View v) {
+        Intent i = new Intent(this, HomeActivity.class);
+        startActivity(i);
+    }
 
-                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    // Create array of definitions
-                    ArrayList<Definition> definitions = new ArrayList<>();
-                    for (DataSnapshot child : childDataSnapshot.child("definitions").getChildren()) {
+    public void addWord(View v) {
+        String word = edt_add.getText().toString();
 
-                        definitions.add(child.getValue(Definition.class));
+        mFunctions = FirebaseFunctions.getInstance();
 
-                    }
+        // Create the arguments to the callable function.
+        Map<String, Object> data = new HashMap<>();
+        data.put("word", word);
 
-                    // Create word
-                    Word word = new Word(childDataSnapshot.child("word").getValue().toString(),
-                            childDataSnapshot.child("phonetic").getValue().toString(),
-                            definitions);
-
-                    words.add(word);
-                }
-
-                wordListAdaptor = new WordListAdaptor(words, new onWordClickListener() {
-                    @Override
-                    public void onWordClicked(View v, int position) {
-
-                        // Navigate to word-specific page
-                        Intent i = new Intent(v.getContext(), WordActivity.class);
-                        i.putExtra("WORD", words.get(position));
-
-                        startActivity(i);
-
+        mFunctions.getHttpsCallable("addWord")
+                  .call(data)
+                  .continueWith(new Continuation<HttpsCallableResult, String>() {
+                      @Override
+                      public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                          // This continuation runs on either success or failure, but if the task
+                          // has failed then getResult() will throw an Exception which will be
+                          // propagated down.
+                          String result = (String) task.getResult().getData();
+                          return result;
                     }
                 });
-                recyclerView.setAdapter(wordListAdaptor);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
+
 }
