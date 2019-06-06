@@ -13,13 +13,24 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textSize="40sp"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="100dp"/>
+
+    <TextView
+        android:id="@+id/phonetic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="100dp"/>
 
     <ListView
         android:id="@+id/definitions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp">
+        android:divider="@android:color/transparent"
+        android:dividerHeight="20dp"
+        android:layout_marginHorizontal="10dp">
 
     </ListView>
 
