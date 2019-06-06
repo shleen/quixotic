@@ -72,8 +72,8 @@ public class HomeActivity extends AppCompatActivity {
 
                     // Create word
                     Word word = new Word(childDataSnapshot.child("word").getValue().toString(),
-                            childDataSnapshot.child("phonetic").getValue().toString(),
-                            definitions);
+                                         childDataSnapshot.child("phonetic").getValue().toString(),
+                                         definitions);
 
                     words.add(word);
                 }

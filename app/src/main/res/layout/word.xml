@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingVertical="10dp"
+    android:paddingHorizontal="15dp">
 
         <TextView
             android:id="@+id/list_word"
@@ -10,16 +12,16 @@
             android:layout_height="wrap_content"
             android:text="Word"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/list_definiton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:text="Definition"
             android:textColor="@android:color/black"
-            android:textSize="16sp"/>
+            android:textSize="18sp"
+            android:lineSpacingExtra="3dp"/>
 
 </LinearLayout>

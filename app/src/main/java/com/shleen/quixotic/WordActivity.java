@@ -1,5 +1,6 @@
 package com.shleen.quixotic;
 
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -12,10 +13,15 @@ public class WordActivity extends AppCompatActivity {
 
     DefinitionAdapter adapter;
 
+    Typeface BUTLER_BOLD;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word);
+
+        // Create typeface required
+        BUTLER_BOLD = Typeface.createFromAsset(getAssets(), "fonts/Butler_Bold.ttf");
 
         // Initialise views
         txt_word = (TextView) findViewById(R.id.word);
@@ -25,6 +31,7 @@ public class WordActivity extends AppCompatActivity {
         Word word = (Word) getIntent().getParcelableExtra("WORD");
 
         // Display word details
+        txt_word.setTypeface(BUTLER_BOLD);
         txt_word.setText(word.getWord());
 
         adapter = new DefinitionAdapter(this, R.layout.definition, word.getDefinitions());

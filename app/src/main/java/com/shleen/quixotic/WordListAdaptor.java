@@ -1,9 +1,8 @@
 package com.shleen.quixotic;
 
-import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +11,12 @@ import android.widget.TextView;
 import java.util.List;
 
 public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHolder> {
+
     private List<Word> words;
     private static onWordClickListener listener;
+
+    private Typeface BUTLER_REG;
+    private Typeface BUTLER_MED;
 
     public WordListAdaptor(List<Word> words, onWordClickListener listener) {
         this.words = words;
@@ -30,8 +33,12 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Word w = words.get(position);
-        holder.txtword.setText(w.getWord());
-        holder.txtdefinition.setText(w.getDefinitions().get(0).getDefinition());
+
+        holder.txt_word.setTypeface(BUTLER_MED);
+        holder.txt_word.setText(w.getWord());
+
+        holder.txt_definition.setTypeface(BUTLER_REG);
+        holder.txt_definition.setText(w.getDefinitions().get(0).getDefinition());
     }
 
     @Override
@@ -40,13 +47,17 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView txtword, txtdefinition;
+
+        private TextView txt_word, txt_definition;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            txtword = (TextView) itemView.findViewById(R.id.list_word);
-            txtdefinition = (TextView) itemView.findViewById(R.id.list_definiton);
+            BUTLER_REG = Typeface.createFromAsset(itemView.getContext().getAssets(), "fonts/Butler_Regular.ttf");
+            BUTLER_MED = Typeface.createFromAsset(itemView.getContext().getAssets(), "fonts/Butler_Medium.ttf");
+
+            txt_word = (TextView) itemView.findViewById(R.id.list_word);
+            txt_definition = (TextView) itemView.findViewById(R.id.list_definiton);
 
             itemView.setOnClickListener(this);
         }
