@@ -5,6 +5,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@drawable/main_background</item>
+        <item name="android:colorControlHighlight">@color/colorDarkestTransparent</item>
     </style>
 
 </resources>

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingHorizontal="15dp"
     android:paddingVertical="20dp"
-    android:layout_margin="10dp"
+    android:layout_marginVertical="10dp"
 
     android:orientation="horizontal"
     android:background="@color/colorLightestTransparent">

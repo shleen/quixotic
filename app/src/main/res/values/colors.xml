@@ -6,5 +6,6 @@
     <color name="colorDarker">#A04B05</color>
     <color name="colorDarkest">#703300</color>
 
-    <color name="colorLightestTransparent">#26FFAC67</color>
+    <color name="colorLightestTransparent">#20FFAC67</color>
+    <color name="colorDarkestTransparent">#26703300</color>
 </resources>
