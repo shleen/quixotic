@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseFunctions mFunctions;
 
-    Typeface BUTLER_BOLD;
+    Typeface BUTLER_REG;
     TextView txt_word_count;
 
     @Override
@@ -44,13 +44,16 @@ public class MainActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
         // Set typeface for txt_word_count
-        BUTLER_BOLD = Typeface.createFromAsset(getAssets(), "fonts/Butler_Bold.ttf");
+        BUTLER_REG = Typeface.createFromAsset(getAssets(), "fonts/Butler_Regular.ttf");
         txt_word_count = (TextView) findViewById(R.id.txt_word_count);
-        txt_word_count.setTypeface(BUTLER_BOLD);
+        txt_word_count.setTypeface(BUTLER_REG);
 
         setWordCount();
 
         edt_add = (EditText) findViewById(R.id.edt_add);
+
+        // Set typeface for edt_add
+        edt_add.setTypeface(BUTLER_REG);
     }
 
     public void goToWords(View v) {
