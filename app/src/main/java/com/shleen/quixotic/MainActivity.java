@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.util.IOUtils;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -24,11 +25,16 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Scanner;
+
+import okhttp3.internal.Util;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     List<Word> words;
 
     QuixoticDbHelper myDbHelper;
-    SQLiteDatabase myDb = null;
+    SQLiteDatabase myDb = myDbHelper.getReadableDatabase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +77,28 @@ public class MainActivity extends AppCompatActivity {
         WordDataHolder.getInstance().setData();
         words = WordDataHolder.getInstance().getData();
 
+        Log.d("ASDFGHJKL", "STARTING");
         // Load database
-        myDbHelper = new QuixoticDbHelper(this);
-        myDbHelper.initializeDataBase();
+        try {
+            InputStream is = getResources().openRawResource(R.raw.create_database);
+
+            String[] statements = FileHelper.parseSqlFile(is);
+
+            for (String statement : statements) {
+                Log.d("ASDFGHJKL", "statement: " + statement);
+
+                if (statement != null && statement.length() != 0) {
+                    myDb.execSQL(statement);
+                }
+            }
+
+            Log.d("ASDFGHJKL", "DONE");
+        } catch (Exception ex) {
+            Log.d("ASDFGHJKL", ex.toString());
+            ex.printStackTrace();
+        }
+//        myDbHelper = new QuixoticDbHelper(this);
+//        myDbHelper.initializeDataBase();
 
     }
 

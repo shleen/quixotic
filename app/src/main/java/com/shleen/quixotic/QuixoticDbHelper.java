@@ -161,7 +161,7 @@ public class QuixoticDbHelper extends SQLiteOpenHelper {
                  * it.
                  */
                  try {
-                 InputStream is = myContext.getResources().getAssets().open("create_database.sql");
+                 InputStream is = myContext.getResources().openRawResource(R.raw.create_database);
 
                  String[] statements = FileHelper.parseSqlFile(is);
 
