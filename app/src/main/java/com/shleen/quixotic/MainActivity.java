@@ -1,20 +1,14 @@
 package com.shleen.quixotic;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.common.util.IOUtils;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -25,16 +19,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Scanner;
-
-import okhttp3.internal.Util;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,9 +37,6 @@ public class MainActivity extends AppCompatActivity {
     TextView txt_word_count;
 
     List<Word> words;
-
-    QuixoticDbHelper myDbHelper;
-    SQLiteDatabase myDb = myDbHelper.getReadableDatabase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,29 +62,6 @@ public class MainActivity extends AppCompatActivity {
         WordDataHolder.getInstance().setData();
         words = WordDataHolder.getInstance().getData();
 
-        Log.d("ASDFGHJKL", "STARTING");
-        // Load database
-        try {
-            InputStream is = getResources().openRawResource(R.raw.create_database);
-
-            String[] statements = FileHelper.parseSqlFile(is);
-
-            for (String statement : statements) {
-                Log.d("ASDFGHJKL", "statement: " + statement);
-
-                if (statement != null && statement.length() != 0) {
-                    myDb.execSQL(statement);
-                }
-            }
-
-            Log.d("ASDFGHJKL", "DONE");
-        } catch (Exception ex) {
-            Log.d("ASDFGHJKL", ex.toString());
-            ex.printStackTrace();
-        }
-//        myDbHelper = new QuixoticDbHelper(this);
-//        myDbHelper.initializeDataBase();
-
     }
 
     public void goToWords(View v) {
@@ -112,39 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
         mFunctions = FirebaseFunctions.getInstance();
 
-        // Pull definition from words table & push to database
-        try {
-            // A reference to the database can be obtained after initialization.
-            myDb = myDbHelper.getReadableDatabase();
-
-            Cursor c = myDb.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
-
-            if (c.moveToFirst()) {
-                while ( !c.isAfterLast() ) {
-                    Toast.makeText(MainActivity.this, "Table Name=> "+c.getString(0), Toast.LENGTH_LONG).show();
-                    c.moveToNext();
-                }
-            }
-
-//            String query = "select * from `entries` where word=?";
-//            Cursor c = myDbHelper.getReadableDatabase().rawQuery(query, new String[] {word});
-//
-//            Log.d("QUIXOTIC_TEST", c.toString());
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                myDbHelper.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            } finally {
-                myDb.close();
-            }
-        }
-
         // Create the arguments to the callable function.
-        /*Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
         data.put("word", word);
 
         mFunctions.getHttpsCallable("addWord")
@@ -165,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                           String result = (String) task.getResult().getData();
                           return result;
                     }
-                });*/
+                });
     }
 
     private void setWordCount() {
