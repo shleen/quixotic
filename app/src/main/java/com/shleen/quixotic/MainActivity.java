@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
@@ -60,7 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Pre-load words
         WordDataHolder.getInstance().setData();
+        words = WordDataHolder.getInstance().getData();
 
+        // Initialize Firebase functions instance
+        mFunctions = FirebaseFunctions.getInstance();
     }
 
     public void goToWords(View v) {
@@ -69,9 +73,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addWord(final View v) {
+        // Pull word to add from edt_add
         String word = edt_add.getText().toString();
 
-        mFunctions = FirebaseFunctions.getInstance();
+        // Check if the word already exists
+        Util u = new Util(v.getContext());
+        if (u.getWords(words).contains(word)) {
+            // Word already exists. Alert user, then redirect to the request word's page.
+            Toast.makeText(getApplicationContext(),word + " has already been added.",Toast.LENGTH_SHORT).show();
+
+            // Navigate to word-specific page
+            Intent i = new Intent(v.getContext(), WordActivity.class);
+            i.putExtra("WORD", words.get(u.getWord(word, words)));
+
+            v.getContext().startActivity(i);
+
+            return;
+        }
 
         // Create the arguments to the callable function.
         Map<String, Object> data = new HashMap<>();
