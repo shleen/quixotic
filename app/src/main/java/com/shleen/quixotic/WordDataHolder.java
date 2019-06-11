@@ -57,7 +57,8 @@ public class WordDataHolder {
                     // Create word
                     Word word = new Word(childDataSnapshot.child("word").getValue().toString(),
                             childDataSnapshot.child("phonetic").getValue().toString(),
-                            definitions);
+                            definitions,
+                            childDataSnapshot.child("created_on").getValue().toString());
 
                     words.add(word);
                 }

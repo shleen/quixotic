@@ -41,6 +41,14 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
         holder.txt_definition.setText(w.getDefinitions().get(0).getDefinition());
     }
 
+    public List<Word> getWords() {
+        return words;
+    }
+
+    public void setWords(List<Word> w) {
+        this.words = w;
+    }
+
     @Override
     public int getItemCount() {
         return words.size();

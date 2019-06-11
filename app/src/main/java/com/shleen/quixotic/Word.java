@@ -9,13 +9,15 @@ public class Word implements Parcelable {
     private String word;
     private String phonetic;
     private ArrayList<Definition> definitions;
+    private String created_on;
 
     public Word() { }
 
-    public Word(String word, String phonetic, ArrayList<Definition> definitions) {
+    public Word(String word, String phonetic, ArrayList<Definition> definitions, String created_on) {
         this.word = word;
         this.phonetic = phonetic;
         this.definitions = definitions;
+        this.created_on = created_on;
     }
 
     public String getWord() {
@@ -40,6 +42,14 @@ public class Word implements Parcelable {
 
     public void setDefinitions(ArrayList<Definition> definitions) {
         this.definitions = definitions;
+    }
+
+    public String getCreatedOn() {
+        return created_on;
+    }
+
+    public void setCreatedOn(String created_on) {
+        this.created_on = created_on;
     }
 
     /* everything below here is for implementing Parcelable */
