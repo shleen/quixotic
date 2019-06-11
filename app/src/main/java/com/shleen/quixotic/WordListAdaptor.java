@@ -65,7 +65,6 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
         @Override
         public void onClick(View v) {
             listener.onWordClicked(v, getLayoutPosition());
-
         }
     }
 }
