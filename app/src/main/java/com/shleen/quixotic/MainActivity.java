@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         String word = edt_add.getText().toString();
 
         // Check if the word already exists
-        Util u = new Util(v.getContext());
+        Util u = new Util();
         if (u.getWords(words).contains(word)) {
             // Word already exists. Alert user, then redirect to the request word's page.
             Toast.makeText(getApplicationContext(),word + " has already been added.",Toast.LENGTH_SHORT).show();

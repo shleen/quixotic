@@ -17,7 +17,7 @@ public class HomeActivity extends AppCompatActivity {
     private WordListAdaptor wordListAdaptor;
 
     private FloatingActionButton toggle_sort;
-    boolean sort_by_created = true;
+    static boolean sort_by_created = true;
 
     List<Word> words;
 
@@ -28,7 +28,6 @@ public class HomeActivity extends AppCompatActivity {
 
         wordListAdaptor = WordDataHolder.getInstance().getWordListAdaptor();
         words = wordListAdaptor.getWords();
-        Collections.sort(words, new AddedSorter());
 
         recyclerView = (IndexFastScrollRecyclerView) findViewById(R.id.word_list);
         recyclerView.setHasFixedSize(true);
@@ -42,19 +41,15 @@ public class HomeActivity extends AppCompatActivity {
         toggle_sort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sort_by_created) {
-                    // Sort by recently added
-                    Collections.sort(words, new WordSorter());
-                    sort_by_created = false;
-                } else {
-                    // Sort alphabetically
-                    Collections.sort(words, new AddedSorter());
-                    sort_by_created = true;
-                }
+                // Sort words
+                words = new Util().sortWords(words);
+
+                // Update recyclerview
                 wordListAdaptor.setWords(words);
                 wordListAdaptor.notifyDataSetChanged();
                 wordListAdaptor.getSections();
 
+                // Toggle visibility of the index bar
                 recyclerView.setIndexBarVisibility(!sort_by_created);
             }
         });

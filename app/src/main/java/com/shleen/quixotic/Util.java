@@ -3,14 +3,14 @@ package com.shleen.quixotic;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class Util {
-    Context myContext;
+import static com.shleen.quixotic.HomeActivity.sort_by_created;
 
-    public Util(Context context) {
-        this.myContext = context;
-    }
+public class Util {
+
+    public Util() { }
 
     // Returns the position of the given word (String) in the given list of words
     public int getWord(String word, List<Word> words) {
@@ -31,6 +31,21 @@ public class Util {
         }
 
         return out;
+    }
+
+    // Sorts the given list of words as indicated by the sort_by_created static flag
+    public List<Word> sortWords(List<Word> words) {
+        if (sort_by_created) {
+            // Sort by recently added
+            Collections.sort(words, new WordSorter());
+            sort_by_created = false;
+        } else {
+            // Sort alphabetically
+            Collections.sort(words, new AddedSorter());
+            sort_by_created = true;
+        }
+
+        return words;
     }
 
 }
