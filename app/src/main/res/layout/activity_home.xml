@@ -7,12 +7,11 @@
     tools:context=".HomeActivity"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
+    <in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView
         android:id="@+id/word_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </android.support.v7.widget.RecyclerView>
-
+    </in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView>
 
     <!-- Note: this element MUST be the last element in this group -->
     <com.shleen.quixotic.MovableFloatingActionButton

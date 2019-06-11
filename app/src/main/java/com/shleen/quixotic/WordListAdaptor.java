@@ -6,13 +6,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHolder> {
+public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHolder> implements SectionIndexer {
 
     private List<Word> words;
+    private ArrayList<Integer> mSectionPositions;
     private static onWordClickListener listener;
 
     private Typeface BUTLER_REG;
@@ -52,6 +55,30 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
     @Override
     public int getItemCount() {
         return words.size();
+    }
+
+    @Override
+    public int getSectionForPosition(int position) {
+        return 0;
+    }
+
+    @Override
+    public Object[] getSections() {
+        List<String> sections = new ArrayList<>(26);
+        mSectionPositions = new ArrayList<>(26);
+        for (int i = 0, size = words.size(); i < size; i++) {
+            String section = String.valueOf(words.get(i).getWord().charAt(0)).toUpperCase();
+            if (!sections.contains(section)) {
+                sections.add(section);
+                mSectionPositions.add(i);
+            }
+        }
+        return sections.toArray(new String[0]);
+    }
+
+    @Override
+    public int getPositionForSection(int sectionIndex) {
+        return mSectionPositions.get(sectionIndex);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

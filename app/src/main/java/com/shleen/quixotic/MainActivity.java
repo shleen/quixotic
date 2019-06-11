@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Pre-load words
         WordDataHolder.getInstance().setData();
-        words = WordDataHolder.getInstance().getData();
 
     }
 
