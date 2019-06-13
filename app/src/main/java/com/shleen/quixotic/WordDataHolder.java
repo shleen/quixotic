@@ -63,7 +63,7 @@ public class WordDataHolder {
                     words.add(word);
                 }
                 // Sort words
-                words = new Util().sortWords(words);
+                Collections.sort(words, new AddedSorter());
 
                 // Update recycler view
                 wordListAdaptor.notifyDataSetChanged();

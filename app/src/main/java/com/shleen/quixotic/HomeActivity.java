@@ -11,13 +11,14 @@ import java.util.List;
 
 import in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView;
 
+import static com.shleen.quixotic.MainActivity.sort_alphabetically;
+
 public class HomeActivity extends AppCompatActivity {
 
     private IndexFastScrollRecyclerView recyclerView;
     private WordListAdaptor wordListAdaptor;
 
     private FloatingActionButton toggle_sort;
-    static boolean sort_by_created = true;
 
     List<Word> words;
 
@@ -28,6 +29,8 @@ public class HomeActivity extends AppCompatActivity {
 
         wordListAdaptor = WordDataHolder.getInstance().getWordListAdaptor();
         words = wordListAdaptor.getWords();
+        Collections.sort(words, new AddedSorter());
+        wordListAdaptor.setWords(words);
 
         recyclerView = (IndexFastScrollRecyclerView) findViewById(R.id.word_list);
         recyclerView.setHasFixedSize(true);
@@ -44,13 +47,13 @@ public class HomeActivity extends AppCompatActivity {
                 // Sort words
                 words = new Util().sortWords(words);
 
-                // Update recyclerview
+                // Update recycler view
                 wordListAdaptor.setWords(words);
                 wordListAdaptor.notifyDataSetChanged();
                 wordListAdaptor.getSections();
 
                 // Toggle visibility of the index bar
-                recyclerView.setIndexBarVisibility(!sort_by_created);
+                recyclerView.setIndexBarVisibility(sort_alphabetically);
             }
         });
     }
