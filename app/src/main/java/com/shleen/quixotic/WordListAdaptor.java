@@ -41,7 +41,11 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
         holder.txt_word.setText(w.getWord());
 
         holder.txt_definition.setTypeface(BUTLER_REG);
-        holder.txt_definition.setText(w.getDefinitions().get(0).getDefinition());
+
+        if (w.getDefinitions().size() > 0)
+        {
+            holder.txt_definition.setText(w.getDefinitions().get(0).getDefinition());
+        }
     }
 
     public List<Word> getWords() {
