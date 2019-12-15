@@ -121,73 +121,32 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Pull word from in-app database
-        db = Util.getDb(this);
-        Cursor c = db.rawQuery("SELECT * FROM entries WHERE LOWER(word)='" + word + "'", null);
+        // Pull word from dictionary api.
 
-        TextView txt = (TextView) findViewById(R.id.edt_add);
-        if (c.moveToFirst()) {
-            // Word found in the in-app database. Push to firebase.
+        // Create the arguments to the callable function.
+        Map<String, Object> data = new HashMap<>();
+        data.put("word", word);
 
-            // Create the arguments to the callable function.
-            Map<String, Object> data = new HashMap<>();
-            data.put("word", c.getString(c.getColumnIndex("word")).toLowerCase());
-            data.put("phonetic", " ");
-            data.put("definition", c.getString(c.getColumnIndex("definition")));
-            data.put("word_type", c.getString(c.getColumnIndex("wordtype")));
+        // Execute call
+        mFunctions.getHttpsCallable("addWord")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, String>() {
+                    @Override
+                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        // Re-fetch words
+                        WordDataHolder.getInstance().setData();
 
-            // Execute call
-            mFunctions.getHttpsCallable("pushWord")
-                    .call(data)
-                    .continueWith(new Continuation<HttpsCallableResult, String>() {
-                        @Override
-                        public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-                            // Re-fetch words
-                            WordDataHolder.getInstance().setData();
+                        // Clear edt_add
+                        edt_add.setText("");
 
-                            // Clear edt_add
-                            edt_add.setText("");
+                        // Redirect to HomeActivity
+                        goToWords(v);
 
-                            // Redirect to HomeActivity
-                            goToWords(v);
-
-                            // Return result
-                            String result = (String) task.getResult().getData();
-                            return result;
-                        }
-                    });
-        } else {
-            // Word not found in the in-app database. Try dictionary api.
-
-            // Create the arguments to the callable function.
-            Map<String, Object> data = new HashMap<>();
-            data.put("word", word);
-
-            // Execute call
-            mFunctions.getHttpsCallable("addWord")
-                    .call(data)
-                    .continueWith(new Continuation<HttpsCallableResult, String>() {
-                        @Override
-                        public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-                            // Re-fetch words
-                            WordDataHolder.getInstance().setData();
-
-                            // Clear edt_add
-                            edt_add.setText("");
-
-                            // Redirect to HomeActivity
-                            goToWords(v);
-
-                            // Return result
-                            String result = (String) task.getResult().getData();
-                            return result;
-                        }
-                    });
-        }
-
-        // Close cursor & database instance
-        c.close();
-        db.close();
+                        // Return result
+                        String result = (String) task.getResult().getData();
+                        return result;
+                    }
+                });
 
     }
 
