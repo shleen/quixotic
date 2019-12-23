@@ -1,9 +1,12 @@
 package com.shleen.quixotic;
 
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import java.util.Collections;
@@ -17,8 +20,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private IndexFastScrollRecyclerView recyclerView;
     private WordListAdaptor wordListAdaptor;
-
-    private FloatingActionButton toggle_sort;
 
     List<Word> words;
 
@@ -40,7 +41,7 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView.setIndexBarTextColor(R.color.colorLighter);
         recyclerView.setAdapter(wordListAdaptor);
 
-        toggle_sort = (FloatingActionButton) findViewById(R.id.toggle_sort);
+        FloatingActionButton toggle_sort = (FloatingActionButton) findViewById(R.id.toggle_sort);
         toggle_sort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +57,21 @@ public class HomeActivity extends AppCompatActivity {
                 recyclerView.setIndexBarVisibility(sort_alphabetically);
             }
         });
+
+        // Initialize swipe to delete
+        enableSwipeToDelete();
+    }
+
+    private void enableSwipeToDelete() {
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                wordListAdaptor.removeWordAt(viewHolder.getAdapterPosition());
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
     }
 
 }

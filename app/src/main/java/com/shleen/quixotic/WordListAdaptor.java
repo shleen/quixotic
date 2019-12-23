@@ -9,8 +9,12 @@ import android.view.ViewGroup;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.google.firebase.functions.FirebaseFunctions;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHolder> implements SectionIndexer {
 
@@ -21,9 +25,14 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
     private Typeface BUTLER_REG;
     private Typeface BUTLER_MED;
 
-    public WordListAdaptor(List<Word> words, onWordClickListener listener) {
+    private FirebaseFunctions mFunctions;
+
+    private WordListAdaptor(List<Word> words, onWordClickListener listener) {
         this.words = words;
         this.listener = listener;
+
+        // Initialize Firebase functions instance
+        mFunctions = FirebaseFunctions.getInstance();
     }
 
     @NonNull
@@ -48,12 +57,25 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
         }
     }
 
-    public List<Word> getWords() {
+    List<Word> getWords() {
         return words;
     }
 
-    public void setWords(List<Word> w) {
+    void setWords(List<Word> w) {
         this.words = w;
+    }
+
+    void removeWordAt(int position) {
+        // Create the arguments to the callable function.
+        Map<String, Object> data = new HashMap<>();
+        data.put("word", words.get(position).getWord());
+
+        // Execute call
+        mFunctions.getHttpsCallable("deleteWord").call(data);
+
+        // Remove from words list
+        words.remove(position);
+        notifyItemRemoved(position);
     }
 
     @Override
@@ -89,7 +111,7 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
 
         private TextView txt_word, txt_definition;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             BUTLER_REG = Typeface.createFromAsset(itemView.getContext().getAssets(), "fonts/Butler_Regular.ttf");
