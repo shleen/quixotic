@@ -1,8 +1,8 @@
 package com.shleen.quixotic;
 
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +27,7 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
 
     private FirebaseFunctions mFunctions;
 
-    private WordListAdaptor(List<Word> words, onWordClickListener listener) {
+    WordListAdaptor(List<Word> words, onWordClickListener listener) {
         this.words = words;
         this.listener = listener;
 
