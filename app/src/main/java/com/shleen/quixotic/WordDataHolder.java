@@ -1,9 +1,12 @@
 package com.shleen.quixotic;
 
+import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import android.view.View;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,13 +20,19 @@ import java.util.List;
 public class WordDataHolder {
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference ref = database.getReference("words");
+    private DatabaseReference ref;
 
     private List<Word> words = new ArrayList<>();
 
     private WordListAdaptor wordListAdaptor;
 
-    WordDataHolder() {
+    GoogleSignInAccount user;
+
+    WordDataHolder(Context c) {
+
+        user = GoogleSignIn.getLastSignedInAccount(c);
+        ref =  database.getReference(String.format("%s/words/", user.getEmail().replaceAll("[^a-zA-Z0-9]", "")));
+
         wordListAdaptor = new WordListAdaptor(words, new onWordClickListener() {
             @Override
             public void onWordClicked(View v, int position) {
@@ -79,6 +88,7 @@ public class WordDataHolder {
 
     public WordListAdaptor getWordListAdaptor() { return wordListAdaptor; }
 
-    private static final WordDataHolder holder = new WordDataHolder();
+    private static WordDataHolder holder = null;
     public static WordDataHolder getInstance() { return holder; }
+    public static void setInstance(WordDataHolder h) { holder = h; }
 }

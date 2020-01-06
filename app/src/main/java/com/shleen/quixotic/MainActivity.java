@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -43,25 +45,40 @@ public class MainActivity extends AppCompatActivity {
 
     Typeface BUTLER_REG;
     TextView txt_word_count;
+    TextView txt_user_name;
 
     List<Word> words;
 
-    static boolean sort_alphabetically = false ;
+    static boolean sort_alphabetically = false;
+
+    GoogleSignInAccount user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize WordDataHolder
+        WordDataHolder.setInstance(new WordDataHolder(this));
+
         // Hide navigation bar
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
-        // Set typeface for txt_word_count
+        // Get signed-in user
+        user = GoogleSignIn.getLastSignedInAccount(this);
+
+        // Set typeface for txt_word_count & txt_user_name
         BUTLER_REG = Typeface.createFromAsset(getAssets(), "fonts/Butler_Regular.ttf");
         txt_word_count = (TextView) findViewById(R.id.txt_word_count);
         txt_word_count.setTypeface(BUTLER_REG);
 
         setWordCount();
+
+        // Set user name
+        txt_user_name = (TextView) findViewById(R.id.txt_user_name);
+        txt_user_name.setTypeface(BUTLER_REG);
+        txt_user_name.setText( String.format("Hello, %s.", user.getDisplayName()));
+
 
         edt_add = (EditText) findViewById(R.id.edt_add);
 
