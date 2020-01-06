@@ -35,7 +35,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference("words");
+    DatabaseReference ref;
 
     SQLiteDatabase db;
 
@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Get signed-in user
         user = GoogleSignIn.getLastSignedInAccount(this);
+
+        // Get reference to user's words
+        ref = database.getReference(String.format("%s/words", user.getEmail().replaceAll("[^a-zA-Z0-9]", "")));
 
         // Set typeface for txt_word_count & txt_user_name
         BUTLER_REG = Typeface.createFromAsset(getAssets(), "fonts/Butler_Regular.ttf");
