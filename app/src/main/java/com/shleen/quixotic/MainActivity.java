@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setWordCount();
+
         // Initialize WordDataHolder
         WordDataHolder.setInstance(new WordDataHolder(this));
 
@@ -74,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
         BUTLER_REG = Typeface.createFromAsset(getAssets(), "fonts/Butler_Regular.ttf");
         txt_word_count = (TextView) findViewById(R.id.txt_word_count);
         txt_word_count.setTypeface(BUTLER_REG);
-
-        setWordCount();
 
         // Set user name
         txt_user_name = (TextView) findViewById(R.id.txt_user_name);
@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Create the arguments to the callable function.
         Map<String, Object> data = new HashMap<>();
+        data.put("user", user.getEmail().replaceAll("[^a-zA-Z0-9]", ""));
         data.put("word", word);
 
         // Execute call
