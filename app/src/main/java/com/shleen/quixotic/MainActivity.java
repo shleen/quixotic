@@ -51,14 +51,12 @@ public class MainActivity extends AppCompatActivity {
 
     static boolean sort_alphabetically = false;
 
-    GoogleSignInAccount user;
+    static GoogleSignInAccount user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        setWordCount();
 
         // Initialize WordDataHolder
         WordDataHolder.setInstance(new WordDataHolder(this));
@@ -71,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Get reference to user's words
         ref = database.getReference(String.format("%s/words", user.getEmail().replaceAll("[^a-zA-Z0-9]", "")));
+
+        setWordCount();
 
         // Set typeface for txt_word_count & txt_user_name
         BUTLER_REG = Typeface.createFromAsset(getAssets(), "fonts/Butler_Regular.ttf");

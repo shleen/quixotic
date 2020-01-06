@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.shleen.quixotic.MainActivity.user;
+
 public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHolder> implements SectionIndexer {
 
     private List<Word> words;
@@ -68,6 +70,7 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
     void removeWordAt(int position) {
         // Create the arguments to the callable function.
         Map<String, Object> data = new HashMap<>();
+        data.put("user", user.getEmail().replaceAll("[^a-zA-Z0-9]", ""));
         data.put("word", words.get(position).getWord());
 
         // Execute call
