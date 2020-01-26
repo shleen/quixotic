@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
-import androidx.annotation.NonNull;
+import android.os.AsyncTask;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,18 +15,21 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.functions.FirebaseFunctions;
-import com.google.firebase.functions.HttpsCallableResult;
+import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -41,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     EditText edt_add;
 
-    private FirebaseFunctions mFunctions;
-
     Typeface BUTLER_REG;
     TextView txt_word_count;
     TextView txt_user_name;
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     List<Word> words;
 
     static boolean sort_alphabetically = false;
+
+    Gson gson;
 
     static GoogleSignInAccount user = null;
 
@@ -92,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
         WordDataHolder.getInstance().setData();
         words = WordDataHolder.getInstance().getData();
 
-        // Initialize Firebase functions instance
-        mFunctions = FirebaseFunctions.getInstance();
+        // Initialize gson
+        gson = new Gson();
     }
 
     @Override
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void addWord(final View v) {
         // Pull word to add from edt_add
-        String word = edt_add.getText().toString().toLowerCase();
+        final String word = edt_add.getText().toString().toLowerCase();
 
         // Check if the word already exists
         Util u = new Util();
@@ -139,33 +142,66 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Pull word from dictionary api.
+        // Pull word from WordsAPI.
+        try {
+            // Create the request
+            URL url = new URL(String.format("https://wordsapiv1.p.rapidapi.com/words/%s", word));
+            final HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-        // Create the arguments to the callable function.
-        Map<String, Object> data = new HashMap<>();
-        data.put("user", user.getEmail().replaceAll("[^a-zA-Z0-9]", ""));
-        data.put("word", word);
+            // Set headers
+            con.setRequestProperty("x-rapidapi-host", "wordsapiv1.p.rapidapi.com");
+            con.setRequestProperty("x-rapidapi-key", "39d1a51539msh98cb55556e92c0bp12dd60jsnb3492d0c0071");
 
-        // Execute call
-        mFunctions.getHttpsCallable("addWord")
-                .call(data)
-                .continueWith(new Continuation<HttpsCallableResult, String>() {
-                    @Override
-                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-                        // Re-fetch words
-                        WordDataHolder.getInstance().setData();
+            con.setRequestMethod("GET");
+
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // Send the request
+                        int status = con.getResponseCode();
+
+                        // Read the response
+                        BufferedReader in = new BufferedReader(
+                                new InputStreamReader(con.getInputStream()));
+                        String inputLine;
+                        StringBuffer content = new StringBuffer();
+                        while ((inputLine = in.readLine()) != null) {
+                            content.append(inputLine);
+                        }
+                        in.close();
+
+                        // Get word features
+                        WordRes word = gson.fromJson(content.toString(), WordRes.class);
+
+                        // Push word to Firebase
+                        Map<String, Object> word_info = new HashMap<>();
+                        word_info.put(word.getWord(), new Word(word.getWord(),  word.getPronunciation(), word.getDefinitions(), Long.toString(Instant.now().getEpochSecond())));
+
+                        ref.updateChildren(word_info);
+
+                        // Close the connection
+                        con.disconnect();
 
                         // Clear edt_add
                         edt_add.setText("");
 
                         // Redirect to HomeActivity
                         goToWords(v);
-
-                        // Return result
-                        String result = (String) task.getResult().getData();
-                        return result;
                     }
-                });
+                    catch (IOException e) {
+                        // TODO: Handle IOException
+                    }
+                }
+            });
+
+        }
+        catch (MalformedURLException e) {
+            // TODO: Handle MalformedURLException
+        }
+        catch (IOException e) {
+            // TODO: Handle IOException
+        }
 
     }
 
