@@ -27,7 +27,7 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
 
     private FirebaseFunctions mFunctions;
 
-    private WordListAdaptor(List<Word> words, onWordClickListener listener) {
+    WordListAdaptor(List<Word> words, onWordClickListener listener) {
         this.words = words;
         this.listener = listener;
 
