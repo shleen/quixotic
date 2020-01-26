@@ -1,8 +1,8 @@
 package com.shleen.quixotic;
 
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.shleen.quixotic.MainActivity.user;
+
 public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHolder> implements SectionIndexer {
 
     private List<Word> words;
@@ -27,7 +29,7 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
 
     private FirebaseFunctions mFunctions;
 
-    private WordListAdaptor(List<Word> words, onWordClickListener listener) {
+    WordListAdaptor(List<Word> words, onWordClickListener listener) {
         this.words = words;
         this.listener = listener;
 
@@ -68,6 +70,7 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
     void removeWordAt(int position) {
         // Create the arguments to the callable function.
         Map<String, Object> data = new HashMap<>();
+        data.put("user", user.getEmail().replaceAll("[^a-zA-Z0-9]", ""));
         data.put("word", words.get(position).getWord());
 
         // Execute call
