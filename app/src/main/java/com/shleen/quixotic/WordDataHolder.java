@@ -64,12 +64,14 @@ public class WordDataHolder {
                     }
 
                     // Create word
-                    Word word = new Word(childDataSnapshot.child("word").getValue().toString(),
-                            childDataSnapshot.child("phonetic").getValue().toString(),
-                            definitions,
-                            childDataSnapshot.child("created_on").getValue().toString());
+                    if (childDataSnapshot.child("word").getValue() != null) {
+                        Word word = new Word(childDataSnapshot.child("word").getValue().toString(),
+                                childDataSnapshot.child("phonetic").getValue().toString(),
+                                definitions,
+                                childDataSnapshot.child("created_on").getValue().toString());
 
-                    words.add(word);
+                        words.add(word);
+                    }
                 }
                 // Sort words
                 Collections.sort(words, new AddedSorter());
