@@ -6,31 +6,29 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.functions.FirebaseFunctions;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +38,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref = database.getReference("words");
+    DatabaseReference ref;
 
     SQLiteDatabase db;
 
@@ -48,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     Typeface BUTLER_REG;
     TextView txt_word_count;
+    TextView txt_user_name;
 
     List<Word> words;
 
@@ -55,20 +54,37 @@ public class MainActivity extends AppCompatActivity {
 
     Gson gson;
 
+    static GoogleSignInAccount user = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize WordDataHolder
+        WordDataHolder.setInstance(new WordDataHolder(this));
+
         // Hide navigation bar
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
-        // Set typeface for txt_word_count
+        // Get signed-in user
+        user = GoogleSignIn.getLastSignedInAccount(this);
+
+        // Get reference to user's words
+        ref = database.getReference(String.format("%s/words", user.getEmail().replaceAll("[^a-zA-Z0-9]", "")));
+
+        setWordCount();
+
+        // Set typeface for txt_word_count & txt_user_name
         BUTLER_REG = Typeface.createFromAsset(getAssets(), "fonts/Butler_Regular.ttf");
         txt_word_count = (TextView) findViewById(R.id.txt_word_count);
         txt_word_count.setTypeface(BUTLER_REG);
 
-        setWordCount();
+        // Set user name
+        txt_user_name = (TextView) findViewById(R.id.txt_user_name);
+        txt_user_name.setTypeface(BUTLER_REG);
+        txt_user_name.setText( String.format("Hello, %s.", user.getDisplayName()));
+
 
         edt_add = (EditText) findViewById(R.id.edt_add);
 
@@ -155,8 +171,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                         in.close();
 
-                        Log.d("QUIXOTIC_DEBUG", content.toString());
-
                         // Get word features
                         WordRes word = gson.fromJson(content.toString(), WordRes.class);
 
@@ -230,23 +244,4 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
-}
-
-class ParameterStringBuilder {
-    static String getParamsString(Map<String, String> params)
-            throws UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder();
-
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-            result.append("&");
-        }
-
-        String resultString = result.toString();
-        return resultString.length() > 0
-                ? resultString.substring(0, resultString.length() - 1)
-                : resultString;
-    }
 }
