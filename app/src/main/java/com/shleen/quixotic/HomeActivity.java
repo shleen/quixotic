@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -63,10 +64,12 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void enableSwipeToDelete() {
-        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this) {
+        final SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                wordListAdaptor.removeWordAt(viewHolder.getAdapterPosition());
+                // Display delete dialog + handle user input
+                DeleteDialog deleteDialog = new DeleteDialog();
+                deleteDialog.showDeleteDialog(getSupportFragmentManager(), "deleteDialog", wordListAdaptor, viewHolder.getAdapterPosition(), this);
             }
         };
 

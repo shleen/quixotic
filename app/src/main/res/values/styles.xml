@@ -8,4 +8,8 @@
         <item name="android:colorControlHighlight">@color/colorDarkestTransparent</item>
     </style>
 
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/rounded_shape</item>
+    </style>
+
 </resources>
