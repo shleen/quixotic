@@ -138,70 +138,69 @@ public class MainActivity extends AppCompatActivity {
             i.putExtra("WORD", words.get(u.getWord(word, words)));
 
             v.getContext().startActivity(i);
-
-            return;
         }
+        else {
+            // Word doesn't exist. Pull word from WordsAPI.
+            try {
+                // Create the request
+                URL url = new URL(String.format("https://wordsapiv1.p.rapidapi.com/words/%s", word));
+                final HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-        // Pull word from WordsAPI.
-        try {
-            // Create the request
-            URL url = new URL(String.format("https://wordsapiv1.p.rapidapi.com/words/%s", word));
-            final HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                // Set headers
+                con.setRequestProperty("x-rapidapi-host", "wordsapiv1.p.rapidapi.com");
+                con.setRequestProperty("x-rapidapi-key", "39d1a51539msh98cb55556e92c0bp12dd60jsnb3492d0c0071");
 
-            // Set headers
-            con.setRequestProperty("x-rapidapi-host", "wordsapiv1.p.rapidapi.com");
-            con.setRequestProperty("x-rapidapi-key", "39d1a51539msh98cb55556e92c0bp12dd60jsnb3492d0c0071");
+                con.setRequestMethod("GET");
 
-            con.setRequestMethod("GET");
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            // Send the request
+                            int status = con.getResponseCode();
 
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // Send the request
-                        int status = con.getResponseCode();
+                            // Read the response
+                            BufferedReader in = new BufferedReader(
+                                    new InputStreamReader(con.getInputStream()));
+                            String inputLine;
+                            StringBuffer content = new StringBuffer();
+                            while ((inputLine = in.readLine()) != null) {
+                                content.append(inputLine);
+                            }
+                            in.close();
 
-                        // Read the response
-                        BufferedReader in = new BufferedReader(
-                                new InputStreamReader(con.getInputStream()));
-                        String inputLine;
-                        StringBuffer content = new StringBuffer();
-                        while ((inputLine = in.readLine()) != null) {
-                            content.append(inputLine);
+                            // Get word features
+                            WordRes word = gson.fromJson(content.toString(), WordRes.class);
+
+                            // Push word to Firebase
+                            Map<String, Object> word_info = new HashMap<>();
+                            word_info.put(word.getWord(), new Word(word.getWord(),  word.getPronunciation(), word.getDefinitions(), Long.toString(Instant.now().getEpochSecond())));
+
+                            ref.updateChildren(word_info);
+
+                            // Close the connection
+                            con.disconnect();
+
+                            // Redirect to HomeActivity
+                            goToWords(v);
                         }
-                        in.close();
-
-                        // Get word features
-                        WordRes word = gson.fromJson(content.toString(), WordRes.class);
-
-                        // Push word to Firebase
-                        Map<String, Object> word_info = new HashMap<>();
-                        word_info.put(word.getWord(), new Word(word.getWord(),  word.getPronunciation(), word.getDefinitions(), Long.toString(Instant.now().getEpochSecond())));
-
-                        ref.updateChildren(word_info);
-
-                        // Close the connection
-                        con.disconnect();
-
-                        // Clear edt_add
-                        edt_add.setText("");
-
-                        // Redirect to HomeActivity
-                        goToWords(v);
+                        catch (IOException e) {
+                            // TODO: Handle IOException
+                        }
                     }
-                    catch (IOException e) {
-                        // TODO: Handle IOException
-                    }
-                }
-            });
+                });
 
+            }
+            catch (MalformedURLException e) {
+                // TODO: Handle MalformedURLException
+            }
+            catch (IOException e) {
+                // TODO: Handle IOException
+            }
         }
-        catch (MalformedURLException e) {
-            // TODO: Handle MalformedURLException
-        }
-        catch (IOException e) {
-            // TODO: Handle IOException
-        }
+
+        // Clear edt_add
+        edt_add.setText("");
 
     }
 
