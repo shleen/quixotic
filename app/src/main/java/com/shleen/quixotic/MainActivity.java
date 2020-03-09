@@ -186,6 +186,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                         catch (IOException e) {
                             // TODO: Handle IOException
+                            NoResultDialog noResultDialog = new NoResultDialog();
+                            noResultDialog.showNoResultDialog(getSupportFragmentManager(), "noResultDialog", word);
                         }
                     }
                 });
