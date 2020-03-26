@@ -3,8 +3,13 @@ package com.shleen.quixotic;
 import android.graphics.Typeface;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 public class WordActivity extends AppCompatActivity {
 
@@ -16,6 +21,8 @@ public class WordActivity extends AppCompatActivity {
 
     Typeface BUTLER_REG;
     Typeface BUTLER_BOLD;
+
+    TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,5 +50,27 @@ public class WordActivity extends AppCompatActivity {
 
         adapter = new DefinitionAdapter(this, R.layout.definition, word.getDefinitions());
         lv_definitions.setAdapter(adapter);
+    }
+
+    public void readWord(View v) {
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int ttsLang = tts.setLanguage(Locale.US);
+
+                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
+                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "The Language is not supported!");
+                    } else {
+                        Log.i("TTS", "Language Supported.");
+                        tts.speak(txt_word.getText(), TextToSpeech.QUEUE_ADD, null, txt_word.getText().toString());
+                    }
+                    Log.i("TTS", "Initialization success.");
+                } else {
+                    Log.i("TTS", "TTS Initialization failed!");
+                }
+            }
+        });
     }
 }

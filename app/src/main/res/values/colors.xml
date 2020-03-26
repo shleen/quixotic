@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorLighterest">#FCF7F3</color>
     <color name="colorLightest">#FFAC67</color>
     <color name="colorLighter">#E9893A</color>
     <color name="colorMain">#C96615</color>
