@@ -34,17 +34,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
-        // Set typeface for TextViews
-        BUTLER_REG = Typeface.createFromAsset(getAssets(), "fonts/Butler_Regular.ttf");
-
-        txt_welcome = (TextView) findViewById(R.id.txt_welcome);
-        txt_welcome.setTypeface(BUTLER_REG);
-
-        txt_sign_in_w_google = (TextView) findViewById(R.id.txt_sign_in_w_google);
-        txt_sign_in_w_google.setTypeface(BUTLER_REG);
-
+        // Initialize Firebase functions instance
+        mFunctions = FirebaseFunctions.getInstance();
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -55,36 +47,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
-
-        // Initialize Firebase functions instance
-        mFunctions = FirebaseFunctions.getInstance();
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
+        if (account == null) {
+            // Show UI
+            setContentView(R.layout.activity_login);
+
+            // Set typeface for TextViews
+            BUTLER_REG = Typeface.createFromAsset(getAssets(), "fonts/Butler_Regular.ttf");
+
+            txt_welcome = (TextView) findViewById(R.id.txt_welcome);
+            txt_welcome.setTypeface(BUTLER_REG);
+
+            txt_sign_in_w_google = (TextView) findViewById(R.id.txt_sign_in_w_google);
+            txt_sign_in_w_google.setTypeface(BUTLER_REG);
+
+            findViewById(R.id.sign_in_button).setOnClickListener(this);
+        }
         updateUI(account);
+
     }
 
     private void updateUI(GoogleSignInAccount acc)
     {
-        if (acc != null)
-        {
-            Log.w("QUIXOTIC_TEST", "calling addUser from updateUI with " + acc.getEmail());
-
-            // No existing sign-in found. Send call to GCF to create user in root db.
-            Map<String, Object> data = new HashMap<>();
-            data.put("user", acc.getEmail().replaceAll("[^a-zA-Z0-9]", ""));
-
-            // Execute call
-            mFunctions.getHttpsCallable("addUser").call(data);
-
+        if (acc != null) {
             // Existing sign-in found. Redirect to home page.
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
@@ -117,8 +105,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            Log.w("QUIXOTIC_TEST", "calling addUser with " + account.getEmail());
 
             // No existing sign-in found. Send call to GCF to create user in root db.
             Map<String, Object> data = new HashMap<>();
