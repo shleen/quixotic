@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -34,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -124,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addWord(final View v) {
+
         // Pull word to add from edt_add
         final String word = edt_add.getText().toString().toLowerCase();
 
@@ -140,65 +144,78 @@ public class MainActivity extends AppCompatActivity {
             v.getContext().startActivity(i);
         }
         else {
-            // Word doesn't exist. Pull word from WordsAPI.
-            try {
-                // Create the request
-                URL url = new URL(String.format("https://wordsapiv1.p.rapidapi.com/words/%s", word));
-                final HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-                // Set headers
-                con.setRequestProperty("x-rapidapi-host", "wordsapiv1.p.rapidapi.com");
-                con.setRequestProperty("x-rapidapi-key", "39d1a51539msh98cb55556e92c0bp12dd60jsnb3492d0c0071");
+            // Word doesn't exist. Get API credentials & Pull word from WordsAPI.
+            DatabaseReference cred_ref = database.getReference("/creds");
+            cred_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    try {
+                        // Create the request
+                        URL url = new URL(String.format("https://wordsapiv1.p.rapidapi.com/words/%s", word));
+                        final HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-                con.setRequestMethod("GET");
+                        // Set headers
+                        con.setRequestProperty("x-rapidapi-host", "wordsapiv1.p.rapidapi.com");
+                        con.setRequestProperty("x-rapidapi-key", Objects.requireNonNull(dataSnapshot.child("key").getValue()).toString());
 
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            // Send the request
-                            int status = con.getResponseCode();
+                        con.setRequestMethod("GET");
 
-                            // Read the response
-                            BufferedReader in = new BufferedReader(
-                                    new InputStreamReader(con.getInputStream()));
-                            String inputLine;
-                            StringBuffer content = new StringBuffer();
-                            while ((inputLine = in.readLine()) != null) {
-                                content.append(inputLine);
+                        AsyncTask.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    // Send the request
+                                    int status = con.getResponseCode();
+
+                                    // Read the response
+                                    BufferedReader in = new BufferedReader(
+                                            new InputStreamReader(con.getInputStream()));
+                                    String inputLine;
+                                    StringBuffer content = new StringBuffer();
+                                    while ((inputLine = in.readLine()) != null) {
+                                        content.append(inputLine);
+                                    }
+                                    in.close();
+
+                                    // Get word features
+                                    WordRes word = gson.fromJson(content.toString(), WordRes.class);
+
+                                    // Push word to Firebase
+                                    Map<String, Object> word_info = new HashMap<>();
+                                    word_info.put(word.getWord(), new Word(word.getWord(),  word.getPronunciation(), word.getDefinitions(), Long.toString(Instant.now().getEpochSecond())));
+
+                                    ref.updateChildren(word_info);
+
+                                    // Close the connection
+                                    con.disconnect();
+
+                                    // Redirect to HomeActivity
+                                    goToWords(v);
+                                }
+                                catch (IOException e) {
+                                    // TODO: Handle IOException
+                                    NoResultDialog noResultDialog = new NoResultDialog();
+                                    noResultDialog.showNoResultDialog(getSupportFragmentManager(), "noResultDialog", word);
+                                }
                             }
-                            in.close();
+                        });
 
-                            // Get word features
-                            WordRes word = gson.fromJson(content.toString(), WordRes.class);
-
-                            // Push word to Firebase
-                            Map<String, Object> word_info = new HashMap<>();
-                            word_info.put(word.getWord(), new Word(word.getWord(),  word.getPronunciation(), word.getDefinitions(), Long.toString(Instant.now().getEpochSecond())));
-
-                            ref.updateChildren(word_info);
-
-                            // Close the connection
-                            con.disconnect();
-
-                            // Redirect to HomeActivity
-                            goToWords(v);
-                        }
-                        catch (IOException e) {
-                            // TODO: Handle IOException
-                            NoResultDialog noResultDialog = new NoResultDialog();
-                            noResultDialog.showNoResultDialog(getSupportFragmentManager(), "noResultDialog", word);
-                        }
                     }
-                });
+                    catch (MalformedURLException e) {
+                        // TODO: Handle MalformedURLException
+                    }
+                    catch (IOException e) {
+                        // TODO: Handle IOException
+                    }
+                }
 
-            }
-            catch (MalformedURLException e) {
-                // TODO: Handle MalformedURLException
-            }
-            catch (IOException e) {
-                // TODO: Handle IOException
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // TODO: Handle database failure
+                }
+            });
+
         }
 
         // Clear edt_add
