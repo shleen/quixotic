@@ -23,6 +23,7 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     Typeface BUTLER_REG;
+    Typeface BUTLER_MED;
     TextView txt_welcome;
     TextView txt_sign_in_w_google;
 
@@ -57,9 +58,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             // Set typeface for TextViews
             BUTLER_REG = Typeface.createFromAsset(getAssets(), "fonts/Butler_Regular.ttf");
+            BUTLER_MED = Typeface.createFromAsset(getAssets(), "fonts/Butler_Medium.ttf");
 
             txt_welcome = (TextView) findViewById(R.id.txt_welcome);
-            txt_welcome.setTypeface(BUTLER_REG);
+            txt_welcome.setTypeface(BUTLER_MED);
 
             txt_sign_in_w_google = (TextView) findViewById(R.id.txt_sign_in_w_google);
             txt_sign_in_w_google.setTypeface(BUTLER_REG);
@@ -75,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (acc != null) {
             // Existing sign-in found. Redirect to home page.
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
         }
     }
