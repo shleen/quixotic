@@ -40,7 +40,7 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="70dp"
         android:layout_below="@id/word_holder"/>
 
     <ListView

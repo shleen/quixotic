@@ -39,7 +39,8 @@
             android:layout_height="wrap_content"
             android:text="Testing text for definition"
             android:layout_below="@id/word_type"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:lineSpacingExtra="3sp"/>
 
         <TextView
             android:id="@+id/example"
@@ -48,7 +49,8 @@
             android:text="Testing text for example"
             android:layout_below="@id/definition"
             android:textColor="@color/colorLightGrey"
-            android:textSize="16sp" />
+            android:textSize="18sp"
+            android:lineSpacingExtra="3sp"/>
 
     </RelativeLayout>
 
