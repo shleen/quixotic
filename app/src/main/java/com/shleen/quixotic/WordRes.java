@@ -21,6 +21,25 @@ public class WordRes {
 
         return definitions;
     }
+
+    public ArrayList<String> getExamples() {
+        ArrayList<String> examples = new ArrayList<>();
+
+        for (Result r : results) {
+            if (r.getExamples() == null) {
+                examples.add("");
+            }
+            else {
+                for (String e : r.getExamples()) {
+                    examples.add(e);
+                }
+            }
+        }
+
+        return examples;
+    }
+
+    public ArrayList<Result> getResults() { return results; }
 }
 
 class Result {
@@ -35,6 +54,8 @@ class Result {
     public String getDefinition() { return definition; }
 
     public String getPartOfSpeech() { return partOfSpeech; }
+
+    public ArrayList<String> getExamples() { return examples; }
 }
 
 class Syllables {

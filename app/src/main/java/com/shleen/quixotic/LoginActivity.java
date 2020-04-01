@@ -20,7 +20,7 @@ import com.google.firebase.functions.FirebaseFunctions;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     Typeface BUTLER_REG;
     Typeface BUTLER_MED;

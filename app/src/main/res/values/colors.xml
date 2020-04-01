@@ -9,4 +9,6 @@
 
     <color name="colorLightestTransparent">#20FFAC67</color>
     <color name="colorDarkestTransparent">#26703300</color>
+
+    <color name="colorLightGrey">#9B9891</color>
 </resources>

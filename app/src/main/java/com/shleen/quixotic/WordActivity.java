@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-public class WordActivity extends AppCompatActivity {
+public class WordActivity extends BaseActivity {
 
     TextView txt_word;
     TextView txt_phonetic;
@@ -48,7 +48,7 @@ public class WordActivity extends AppCompatActivity {
         txt_phonetic.setTypeface(BUTLER_REG);
         txt_phonetic.setText(word.getPhonetic());
 
-        adapter = new DefinitionAdapter(this, R.layout.definition, word.getDefinitions());
+        adapter = new DefinitionAdapter(this, R.layout.definition, word.getDefinitions(), word.getExamples());
         lv_definitions.setAdapter(adapter);
     }
 

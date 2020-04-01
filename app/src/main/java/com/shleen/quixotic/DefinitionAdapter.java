@@ -16,15 +16,17 @@ public class DefinitionAdapter extends ArrayAdapter<Definition> {
     private Context mContext;
     private int resourceLayout;
     private List<Definition> definitions;
+    private ArrayList<String> examples;
 
     private Typeface BUTLER_REG;
 
-    public DefinitionAdapter(Context context, int resource, ArrayList<Definition> definitions) {
+    public DefinitionAdapter(Context context, int resource, ArrayList<Definition> definitions, ArrayList<String> examples) {
         super(context, resource, definitions);
 
         this.mContext = context;
         this.resourceLayout = resource;
         this.definitions = definitions;
+        this.examples = examples;
 
         // Initialize required typeface
         BUTLER_REG = Typeface.createFromAsset(context.getAssets(), "fonts/Butler_Regular.ttf");
@@ -50,6 +52,22 @@ public class DefinitionAdapter extends ArrayAdapter<Definition> {
         TextView txt_definition = (TextView) v.findViewById(R.id.definition);
         txt_definition.setTypeface(BUTLER_REG);
         txt_definition.setText(currentDefinition.getDefinition());
+
+        if (examples != null) {
+            TextView txt_example = (TextView) v.findViewById(R.id.example);
+            if (examples.size() > 0) {
+                if (examples.get(position).equals("")) {
+                    txt_example.setVisibility(View.GONE);
+                }
+                else {
+                    txt_example.setTypeface(BUTLER_REG);
+                    txt_example.setText(String.format("\"%s\"", examples.get(position)));
+                }
+            }
+            else {
+                txt_example.setVisibility(View.GONE);
+            }
+        }
 
         return v;
 

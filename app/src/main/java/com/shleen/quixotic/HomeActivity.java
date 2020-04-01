@@ -17,7 +17,7 @@ import in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView;
 
 import static com.shleen.quixotic.MainActivity.sort_alphabetically;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
 
     private IndexFastScrollRecyclerView recyclerView;
     private WordListAdaptor wordListAdaptor;

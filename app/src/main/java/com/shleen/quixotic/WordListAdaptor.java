@@ -3,6 +3,7 @@ package com.shleen.quixotic;
 import android.graphics.Typeface;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,9 +55,7 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
         holder.txt_definition.setTypeface(BUTLER_REG);
 
         if (w.getDefinitions().size() > 0)
-        {
-            holder.txt_definition.setText(w.getDefinitions().get(0).getDefinition());
-        }
+        { holder.txt_definition.setText(w.getDefinitions().get(0).getDefinition()); }
     }
 
     List<Word> getWords() {

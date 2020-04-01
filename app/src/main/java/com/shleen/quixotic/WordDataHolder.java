@@ -63,12 +63,19 @@ public class WordDataHolder {
                         definitions.add(child.getValue(Definition.class));
                     }
 
+                    // Create array of examples
+                    ArrayList<String> examples = new ArrayList<>();
+                    for (DataSnapshot child : childDataSnapshot.child("examples").getChildren()) {
+                        examples.add(child.getValue().toString());
+                    }
+
                     // Create word
                     if (childDataSnapshot.child("word").getValue() != null) {
                         Word word = new Word(childDataSnapshot.child("word").getValue().toString(),
                                 childDataSnapshot.child("phonetic").getValue().toString(),
                                 definitions,
-                                childDataSnapshot.child("createdOn").getValue().toString());
+                                childDataSnapshot.child("createdOn").getValue().toString(),
+                                examples);
 
                         words.add(word);
                     }

@@ -10,14 +10,16 @@ public class Word implements Parcelable {
     private String phonetic;
     private ArrayList<Definition> definitions;
     private String created_on;
+    private ArrayList<String> examples;
 
     public Word() { }
 
-    public Word(String word, String phonetic, ArrayList<Definition> definitions, String created_on) {
+    public Word(String word, String phonetic, ArrayList<Definition> definitions, String created_on, ArrayList<String> examples) {
         this.word = word;
         this.phonetic = phonetic;
         this.definitions = definitions;
         this.created_on = created_on;
+        this.examples = examples;
     }
 
     public String getWord() {
@@ -52,6 +54,14 @@ public class Word implements Parcelable {
         this.created_on = created_on;
     }
 
+    public ArrayList<String> getExamples() {
+        return examples;
+    }
+
+    public void setExamples(ArrayList<String> examples) {
+        this.examples = examples;
+    }
+
     /* everything below here is for implementing Parcelable */
 
     // 99.9% of the time you can just ignore this
@@ -66,6 +76,7 @@ public class Word implements Parcelable {
         out.writeString(word);
         out.writeString(phonetic);
         out.writeList(definitions);
+        out.writeList(examples);
     }
 
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
@@ -86,5 +97,7 @@ public class Word implements Parcelable {
 
         this.definitions = new ArrayList<>();
         in.readList(this.definitions, Definition.class.getClassLoader());
+
+        this.examples = in.readArrayList(ClassLoader.getSystemClassLoader());
     }
 }

@@ -8,7 +8,6 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -38,7 +37,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref;
@@ -76,7 +75,18 @@ public class MainActivity extends AppCompatActivity {
         // Get reference to user's words
         ref = database.getReference(String.format("%s/words", user.getEmail().replaceAll("[^a-zA-Z0-9]", "")));
 
-        setWordCount();
+        // Set up listener to update word count
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                txt_word_count.setText(String.format(Locale.ENGLISH, "%d words added.", dataSnapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // TODO: Handle database error
+            }
+        });
 
         // Set typeface for txt_word_count & txt_user_name
         BUTLER_REG = Typeface.createFromAsset(getAssets(), "fonts/Butler_Regular.ttf");
@@ -105,9 +115,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
-        // Update word count
-        setWordCount();
 
         // Initialize database on first run of application
         SharedPreferences settings = getSharedPreferences("FIRST_LAUNCH", 0);
@@ -183,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     // Push word to Firebase
                                     Map<String, Object> word_info = new HashMap<>();
-                                    word_info.put(word.getWord(), new Word(word.getWord(),  word.getPronunciation(), word.getDefinitions(), Long.toString(Instant.now().getEpochSecond())));
+                                    word_info.put(word.getWord(), new Word(word.getWord(),  word.getPronunciation(), word.getDefinitions(), Long.toString(Instant.now().getEpochSecond()), word.getExamples()));
 
                                     ref.updateChildren(word_info);
 
@@ -221,20 +228,6 @@ public class MainActivity extends AppCompatActivity {
         // Clear edt_add
         edt_add.setText("");
 
-    }
-
-    private void setWordCount() {
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                txt_word_count.setText(String.format(Locale.ENGLISH, "%d words added.", dataSnapshot.getChildrenCount()));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // TODO: Handle database error
-            }
-        });
     }
 
     private void initialiseDatabase(final Context c) {
