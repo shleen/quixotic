@@ -12,6 +12,8 @@ public class WordRes {
 
     public String getPronunciation() { return pronunciation.getAll(); }
 
+    public void setPronunciation(String p) { pronunciation.setAll(p); }
+
     public ArrayList<Definition> getDefinitions() {
         ArrayList<Definition> definitions = new ArrayList<>();
 
@@ -67,4 +69,6 @@ class Pronunciation {
     private String all;
 
     public String getAll() { return all; }
+
+    public void setAll(String a) { all = a; }
 }

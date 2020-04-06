@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -186,7 +188,15 @@ public class MainActivity extends BaseActivity {
                                     in.close();
 
                                     // Get word features
-                                    WordRes word = gson.fromJson(content.toString(), WordRes.class);
+                                    GsonBuilder gsonBuilder = new GsonBuilder();
+
+                                    WordResDeserializer deserializer = new WordResDeserializer();
+                                    gsonBuilder.registerTypeAdapter(WordRes.class, deserializer);
+
+                                    Gson customGson = gsonBuilder.create();
+                                    WordRes word = customGson.fromJson(content.toString(), WordRes.class);
+
+                                    if (word == null) throw new IOException();
 
                                     // Push word to Firebase
                                     Map<String, Object> word_info = new HashMap<>();
