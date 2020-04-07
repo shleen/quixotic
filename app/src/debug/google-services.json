@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "740700846659",
+    "firebase_url": "https://quixotic-678bb.firebaseio.com",
+    "project_id": "quixotic-678bb",
+    "storage_bucket": "quixotic-678bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:740700846659:android:38d508a86252f66e",
+        "android_client_info": {
+          "package_name": "com.shleen.quixotic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "740700846659-s0lfcki9bl06mgkn3c339och2dpb2kuu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAjjQxJhbJ5iqh0mzhOjWK3Matp7HczOs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "740700846659-lmch4m1b68roeo1i24kppshugii6gqp8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "740700846659-4q0ddtf7pv5o306mhj7qij7n3lcf2nrr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shpleen.quixotic"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
