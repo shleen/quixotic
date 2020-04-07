@@ -30,6 +30,9 @@ public class WordResDeserializer implements JsonDeserializer<WordRes> {
             if (jsonObject.get("pronunciation").toString().charAt(0) != '{') {
                 pronunciation.addProperty("all", jsonObject.get("pronunciation").getAsString());
             }
+            else {
+                pronunciation = jsonObject.getAsJsonObject("pronunciation");
+            }
         } catch (NullPointerException e) {
             pronunciation.addProperty("all", "");
         }
