@@ -32,10 +32,11 @@
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
-        android:layout_width="100pt"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_centerHorizontal="false"
         android:layout_below="@id/txt_sign_in_w_google"
-        android:layout_marginVertical="100dp"/>
+        android:layout_marginVertical="50dp"
+        android:layout_marginStart="20dp"/>
 
 </RelativeLayout>
