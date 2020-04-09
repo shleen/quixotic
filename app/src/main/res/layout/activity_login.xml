@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:text="Welcome!"
         android:textSize="32sp"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
+        android:paddingStart="20dp"
         android:textColor="@color/colorDarkest" />
 
     <TextView
@@ -23,7 +24,8 @@
         android:layout_height="wrap_content"
         android:text="Sign in with your Google account to proceed."
         android:textSize="16sp"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
+        android:paddingStart="20dp"
         android:layout_below="@id/txt_welcome"
         android:layout_marginTop="10dp"
         android:textColor="@color/colorDarkest" />
@@ -32,8 +34,8 @@
         android:id="@+id/sign_in_button"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_marginStart="20dp"
         android:layout_below="@id/txt_sign_in_w_google"
-        android:layout_marginVertical="120dp"/>
+        android:layout_marginVertical="100dp"/>
 
 </RelativeLayout>
