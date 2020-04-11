@@ -1,9 +1,6 @@
 package com.shleen.quixotic;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 
@@ -28,7 +25,6 @@ import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -44,8 +40,6 @@ public class MainActivity extends BaseActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref;
-
-    SQLiteDatabase db;
 
     EditText edt_add;
 
@@ -125,22 +119,6 @@ public class MainActivity extends BaseActivity {
         // Deselect nav items
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.false_add);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // Initialize database on first run of application
-        SharedPreferences settings = getSharedPreferences("FIRST_LAUNCH", 0);
-        if (settings.getBoolean("FIRST_LAUNCH", true)) {
-
-            initialiseDatabase(this);
-
-            // Update FIRST_LAUNCH
-            settings.edit().putBoolean("FIRST_LAUNCH", false).apply();
-        }
-
     }
 
     public void goToWords(View v) {
@@ -254,31 +232,6 @@ public class MainActivity extends BaseActivity {
         // Clear edt_add
         edt_add.setText("");
 
-    }
-
-    private void initialiseDatabase(final Context c) {
-
-        // Create & populate database in a new thread
-        Thread thread = new Thread(new Runnable(){
-            @Override
-            public void run(){
-                db = Util.getDb(c);
-
-                try {
-                    InputStream inputstream = getAssets().open("create_database.sql");
-                    String[] statements = Util.parseSqlFile(inputstream);
-
-                    for (String statement : statements) { db.execSQL(statement); }
-                    inputstream.close();
-
-                } catch (IOException e) {
-                    // TODO: Handle IOException
-                }
-
-                db.close();
-            }
-        });
-        thread.start();
     }
 
 }

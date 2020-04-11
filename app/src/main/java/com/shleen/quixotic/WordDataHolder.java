@@ -17,20 +17,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class WordDataHolder {
+class WordDataHolder {
 
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref;
 
     private List<Word> words = new ArrayList<>();
 
     private WordListAdaptor wordListAdaptor;
 
-    GoogleSignInAccount user;
+    private GoogleSignInAccount user;
 
     WordDataHolder(Context c) {
 
         user = GoogleSignIn.getLastSignedInAccount(c);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         ref =  database.getReference(String.format("%s/words/", user.getEmail().replaceAll("[^a-zA-Z0-9]", "")));
 
         wordListAdaptor = new WordListAdaptor(words, new onWordClickListener() {
@@ -44,11 +44,11 @@ public class WordDataHolder {
                 v.getContext().startActivity(i);
 
             }
-        });
+        }, c);
     }
 
-    public List<Word> getData() { return words; }
-    public void setData() {
+    List<Word> getData() { return words; }
+    void setData() {
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -96,9 +96,9 @@ public class WordDataHolder {
         });
     }
 
-    public WordListAdaptor getWordListAdaptor() { return wordListAdaptor; }
+    WordListAdaptor getWordListAdaptor() { return wordListAdaptor; }
 
     private static WordDataHolder holder = null;
-    public static WordDataHolder getInstance() { return holder; }
-    public static void setInstance(WordDataHolder h) { holder = h; }
+    static WordDataHolder getInstance() { return holder; }
+    static void setInstance(WordDataHolder h) { holder = h; }
 }

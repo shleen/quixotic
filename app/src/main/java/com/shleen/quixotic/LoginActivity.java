@@ -1,11 +1,8 @@
 package com.shleen.quixotic;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,12 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.functions.FirebaseFunctions;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -30,14 +22,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     GoogleSignInClient mGoogleSignInClient;
     static int RC_SIGN_IN = 1;
 
-    private FirebaseFunctions mFunctions;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Initialize Firebase functions instance
-        mFunctions = FirebaseFunctions.getInstance();
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -101,28 +88,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            updateUI(task.getResult());
         }
     }
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // No existing sign-in found. Send call to GCF to create user in root db.
-            Map<String, Object> data = new HashMap<>();
-            data.put("user", account.getEmail().replaceAll("[^a-zA-Z0-9]", ""));
-
-            // Execute call
-            mFunctions.getHttpsCallable("addUser").call(data);
-
-            // Signed in successfully, show authenticated UI.
-            updateUI(account);
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("QUIXOTIC_TEST", "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
-        }
-    }
 }

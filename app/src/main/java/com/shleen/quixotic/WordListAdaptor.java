@@ -1,5 +1,6 @@
 package com.shleen.quixotic;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,14 +11,14 @@ import android.view.ViewGroup;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.google.firebase.functions.FirebaseFunctions;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static com.shleen.quixotic.MainActivity.user;
+import java.util.Objects;
 
 public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHolder> implements SectionIndexer {
 
@@ -28,14 +29,18 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
     private Typeface BUTLER_REG;
     private Typeface BUTLER_MED;
 
-    private FirebaseFunctions mFunctions;
+    private DatabaseReference ref;
 
-    WordListAdaptor(List<Word> words, onWordClickListener listener) {
+    WordListAdaptor(List<Word> words, onWordClickListener listener, Context c) {
         this.words = words;
-        this.listener = listener;
+        WordListAdaptor.listener = listener;
 
-        // Initialize Firebase functions instance
-        mFunctions = FirebaseFunctions.getInstance();
+        // Get signed-in user
+        GoogleSignInAccount user = GoogleSignIn.getLastSignedInAccount(c);
+
+        // Get reference to user's words
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        ref = database.getReference(String.format("%s/words", Objects.requireNonNull(user.getEmail()).replaceAll("[^a-zA-Z0-9]", "")));
     }
 
     @NonNull
@@ -67,13 +72,8 @@ public class WordListAdaptor extends RecyclerView.Adapter<WordListAdaptor.ViewHo
     }
 
     void removeWordAt(int position) {
-        // Create the arguments to the callable function.
-        Map<String, Object> data = new HashMap<>();
-        data.put("user", user.getEmail().replaceAll("[^a-zA-Z0-9]", ""));
-        data.put("word", words.get(position).getWord());
-
-        // Execute call
-        mFunctions.getHttpsCallable("deleteWord").call(data);
+        // Remove from Firebase Realtime Database
+        ref.child(words.get(position).getWord()).removeValue();
 
         // Remove from words list
         words.remove(position);

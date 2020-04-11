@@ -30,7 +30,6 @@ dependencies {
     // Non-default dependencies
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'com.google.firebase:firebase-database:17.0.0'
-    implementation 'com.google.firebase:firebase-functions:17.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 
     implementation 'com.github.myinnos:AlphabetIndex-Fast-Scroll-RecyclerView:1.0.92'
