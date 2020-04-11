@@ -1,15 +1,24 @@
 <resources>
 
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@drawable/main_background</item>
         <item name="android:colorControlHighlight">@color/colorDarkestTransparent</item>
+
+        <item name="colorPrimary">@color/colorMain</item>
+        <item name="colorOnPrimary">@color/colorLightest</item>
+        <item name="colorOnSecondary">@color/colorLighterest</item>
     </style>
 
     <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/rounded_shape</item>
+    </style>
+
+    <style name="AppTheme.PronounceButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorAccent">@color/colorDarkest</item>
+        <item name="colorButtonNormal">@color/colorLighterest</item>
     </style>
 
 </resources>

@@ -1,14 +1,14 @@
 package com.shleen.quixotic;
 
 import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import android.view.View;
+
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +23,9 @@ public class HomeActivity extends BaseActivity {
     private WordListAdaptor wordListAdaptor;
 
     List<Word> words;
+
+    MaterialButtonToggleGroup toggle_sort;
+    MaterialButton btn_sort_chrono;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,25 +45,36 @@ public class HomeActivity extends BaseActivity {
         recyclerView.setIndexBarTextColor(R.color.colorLighter);
         recyclerView.setAdapter(wordListAdaptor);
 
-        FloatingActionButton toggle_sort = (FloatingActionButton) findViewById(R.id.toggle_sort);
-        toggle_sort.setOnClickListener(new View.OnClickListener() {
+        // Set up top bar
+        btn_sort_chrono = (MaterialButton) findViewById(R.id.btn_sort_chrono);
+        btn_sort_chrono.setChecked(true);
+
+        toggle_sort = (MaterialButtonToggleGroup) findViewById(R.id.toggle_sort);
+        toggle_sort.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
             @Override
-            public void onClick(View v) {
-                // Sort words
-                words = new Util().sortWords(words);
+            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
 
-                // Update recycler view
-                wordListAdaptor.setWords(words);
-                wordListAdaptor.notifyDataSetChanged();
-                wordListAdaptor.getSections();
+                if (isChecked) {
+                    // Sort words
+                    words = new Util().sortWords(words);
 
-                // Toggle visibility of the index bar
-                recyclerView.setIndexBarVisibility(sort_alphabetically);
+                    // Update recycler view
+                    wordListAdaptor.setWords(words);
+                    wordListAdaptor.notifyDataSetChanged();
+                    wordListAdaptor.getSections();
+
+                    // Toggle visibility of the index bar
+                    recyclerView.setIndexBarVisibility(sort_alphabetically);
+                }
+
             }
         });
 
         // Initialize swipe to delete
         enableSwipeToDelete();
+
+        // Set nav listeners
+        setNavListeners();
     }
 
     private void enableSwipeToDelete() {

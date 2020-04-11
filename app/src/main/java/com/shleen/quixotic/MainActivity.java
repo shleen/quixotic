@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -68,9 +69,6 @@ public class MainActivity extends BaseActivity {
         // Initialize WordDataHolder
         WordDataHolder.setInstance(new WordDataHolder(this));
 
-        // Hide navigation bar
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-
         // Get signed-in user
         user = GoogleSignIn.getLastSignedInAccount(this);
 
@@ -80,12 +78,12 @@ public class MainActivity extends BaseActivity {
         // Set up listener to update word count
         ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 txt_word_count.setText(String.format(Locale.ENGLISH, "%d words added.", dataSnapshot.getChildrenCount()));
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 // TODO: Handle database error
             }
         });
@@ -100,11 +98,19 @@ public class MainActivity extends BaseActivity {
         txt_user_name.setTypeface(BUTLER_REG);
         txt_user_name.setText( String.format("Hello, %s.", user.getDisplayName()));
 
-
         edt_add = (EditText) findViewById(R.id.edt_add);
 
         // Set typeface for edt_add
         edt_add.setTypeface(BUTLER_REG);
+
+        // Set enter listener for edt_add
+        edt_add.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                addWord(edt_add);
+                return true;
+            }
+        });
 
         // Pre-load words
         WordDataHolder.getInstance().setData();
@@ -112,6 +118,13 @@ public class MainActivity extends BaseActivity {
 
         // Initialize gson
         gson = new Gson();
+
+        // Set nav listeners
+        setNavListeners();
+
+        // Deselect nav items
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.false_add);
     }
 
     @Override
@@ -139,6 +152,9 @@ public class MainActivity extends BaseActivity {
 
         // Pull word to add from edt_add
         final String word = edt_add.getText().toString().toLowerCase();
+
+        // Check that there is input to handle
+        if (word.equals("")) { return; }
 
         // Check if the word already exists
         Util u = new Util();

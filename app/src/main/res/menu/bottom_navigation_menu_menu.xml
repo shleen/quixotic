@@ -1,0 +1,33 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:enabled="true"
+        android:icon="@drawable/ic_home_selected"
+        android:title="@null" />
+
+    <item
+        android:id="@+id/notes"
+        android:enabled="true"
+        android:icon="@drawable/ic_notes_selected"
+        android:title="@null" />
+
+    <item
+        android:id="@+id/false_add"
+        android:enabled="false"
+        android:title="@null"/>
+
+    <item
+        android:id="@+id/quiz"
+        android:enabled="true"
+        android:icon="@drawable/ic_quiz_selected"
+        android:title="@null" />
+
+    <item
+        android:id="@+id/profile"
+        android:enabled="true"
+        android:icon="@drawable/ic_profile_selected"
+        android:title="@null" />
+
+</menu>

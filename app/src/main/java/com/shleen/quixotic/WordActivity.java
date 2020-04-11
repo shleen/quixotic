@@ -50,6 +50,9 @@ public class WordActivity extends BaseActivity {
 
         adapter = new DefinitionAdapter(this, R.layout.definition, word.getDefinitions(), word.getExamples());
         lv_definitions.setAdapter(adapter);
+
+        // Set nav listeners
+        setNavListeners();
     }
 
     public void readWord(View v) {

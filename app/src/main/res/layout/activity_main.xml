@@ -43,6 +43,7 @@
             android:textSize="26sp"/>
 
         <LinearLayout
+            android:id="@+id/form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -63,33 +64,38 @@
 
                 android:cursorVisible="false"
                 android:textColor="@color/colorDarker"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:maxLines="1"
+                android:inputType="textShortMessage"/>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_add"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
 
                 android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-
                 android:layout_marginEnd="50dp"
-
-                android:layout_marginRight="50dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/rounded_button_background"
-                android:onClick="addWord"
-                android:text="+"
-                android:textAlignment="center"
-
-                android:textColor="@color/colorLightest"
-                android:textSize="24sp" />
+                app:cornerRadius="30dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:background="@color/colorMain"
+                app:icon="@drawable/ic_add"
+                app:iconSize="24dp"
+                app:iconGravity="textStart"
+                android:padding="0dp"
+                app:iconPadding="0dp"
+                android:onClick="addWord"/>
 
         </LinearLayout>
 
     </RelativeLayout>
+
+    <include layout="@layout/bottom_navigation_menu" />
 
 </RelativeLayout>

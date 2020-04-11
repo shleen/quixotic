@@ -38,8 +38,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginVertical="15dp">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_ok"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="OK"
