@@ -7,6 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".ProfileActivity">
 
+    <ImageView
+        android:id="@+id/img_user"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:gravity="center_horizontal" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_logout"
         android:layout_width="match_parent"
@@ -14,7 +20,8 @@
         android:text="Sign out"
         android:textAlignment="center"
         android:onClick="attemptSignOut"
-        style="@style/Widget.MaterialComponents.Button.TextButton"/>
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_below="@id/img_user"/>
 
     <include layout="@layout/bottom_navigation_menu" />
 
