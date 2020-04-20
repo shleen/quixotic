@@ -63,6 +63,9 @@ public class MainActivity extends BaseActivity {
         // Initialize WordDataHolder
         WordDataHolder.setInstance(new WordDataHolder(this));
 
+        // Initialize NoteDataHolder
+        NoteDataHolder.setInstance(new NoteDataHolder(this));
+
         // Get signed-in user
         user = GoogleSignIn.getLastSignedInAccount(this);
 
@@ -109,6 +112,9 @@ public class MainActivity extends BaseActivity {
         // Pre-load words
         WordDataHolder.getInstance().setData();
         words = WordDataHolder.getInstance().getData();
+
+        // Pre-load notes
+        NoteDataHolder.getInstance().setData();
 
         // Initialize gson
         gson = new Gson();

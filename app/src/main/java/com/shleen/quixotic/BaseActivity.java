@@ -25,21 +25,18 @@ public class BaseActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Intent i;
                 switch (item.getItemId()) {
                     case R.id.home:
-                        i = new Intent(getApplicationContext(), HomeActivity.class);
-                        startActivity(i);
+                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         break;
                     case R.id.notes:
-                        Toast.makeText(getApplicationContext(), "Notes. Coming soon!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), NotesActivity.class));
                         break;
                     case R.id.quiz:
                         Toast.makeText(getApplicationContext(), "Quiz. Coming soon!", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.profile:
-                        i = new Intent(getApplicationContext(), ProfileActivity.class);
-                        startActivity(i);
+                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         break;
                 }
                 return true;
