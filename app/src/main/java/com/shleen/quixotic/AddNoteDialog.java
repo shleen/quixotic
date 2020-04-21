@@ -5,23 +5,22 @@ import android.app.Dialog;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -31,16 +30,12 @@ import java.util.Map;
 
 public class AddNoteDialog extends DialogFragment {
 
-    String word;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference ref;
 
-    private Typeface BUTLER_REG;
-
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference ref;
-
-    EditText edt_note;
-    EditText edt_author;
-    EditText edt_work;
+    private TextInputEditText edt_note;
+    private TextInputEditText edt_author;
+    private TextInputEditText edt_work;
 
     @Override
     public void onResume() {
@@ -54,18 +49,15 @@ public class AddNoteDialog extends DialogFragment {
         display.getSize(size);
 
         // Set the width of the dialog proportional to 75% of the screen width
-        window.setLayout((int) (size.x * 0.75), WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setLayout((int) (size.x * 0.8), WindowManager.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        TextView txt_title;
-        TextView txt_message;
-
-        Button btn_ok;
-        Button btn_add;
+        MaterialButton btn_add;
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
@@ -75,7 +67,6 @@ public class AddNoteDialog extends DialogFragment {
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialog);
-        builder.setView(v);
 
         // Get signed-in user
         GoogleSignInAccount user = GoogleSignIn.getLastSignedInAccount(v.getContext());
@@ -83,50 +74,56 @@ public class AddNoteDialog extends DialogFragment {
         // Get reference to user's words
         ref = database.getReference(String.format("%s/notes", user.getEmail().replaceAll("[^a-zA-Z0-9]", "")));
 
-//        // Set typeface for TextViews
-//        BUTLER_REG = Typeface.createFromAsset(getContext().getAssets(), "fonts/Butler_Regular.ttf");
-//
-//        // Set title
-//        txt_title = (TextView) v.findViewById(R.id.title);
-//        txt_title.setTypeface(BUTLER_REG);
-//        txt_title.setText(String.format("Could not add %s.", word));
-//
-//        // Set message
-//        txt_message = (TextView) v.findViewById(R.id.message);
-//        txt_message.setTypeface(BUTLER_REG);
-//        txt_message.setText(String.format("No definitions found for %s.", word));
-//
-//        // Set btn_ok
-//        btn_ok = (Button) v.findViewById(R.id.btn_ok);
-//        btn_ok.setTypeface(BUTLER_REG);
-//        btn_ok.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Dismiss dialog
-//                dismiss();
-//            }
-//        });
+        // Set typeface for TextViews
+        Typeface BUTLER_REG = Typeface.createFromAsset(getContext().getAssets(), "fonts/Butler_Regular.ttf");
 
-        edt_note = (EditText) v.findViewById(R.id.edt_note);
-        edt_author = (EditText) v.findViewById(R.id.edt_author);
-        edt_work = (EditText) v.findViewById(R.id.edt_work);
+        TextView txt_note = (TextView) v.findViewById(R.id.txt_note);
+        TextView txt_author = (TextView) v.findViewById(R.id.txt_author);
+        TextView txt_work = (TextView) v.findViewById(R.id.txt_work);
+
+        txt_note.setTypeface(BUTLER_REG);
+        txt_author.setTypeface(BUTLER_REG);
+        txt_work.setTypeface(BUTLER_REG);
+
+        edt_note = (TextInputEditText) v.findViewById(R.id.edt_note);
+        edt_author = (TextInputEditText) v.findViewById(R.id.edt_author);
+        edt_work = (TextInputEditText) v.findViewById(R.id.edt_work);
+
+        edt_note.setTypeface(BUTLER_REG);
+        edt_author.setTypeface(BUTLER_REG);
+        edt_work.setTypeface(BUTLER_REG);
 
         // Set btn_add functionality
-        btn_add = (Button) v.findViewById(R.id.btn_add_note);
+        btn_add = (MaterialButton) v.findViewById(R.id.btn_add_note);
+        btn_add.setTypeface(BUTLER_REG);
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                // Push note to Firebase
-                Map<String, String> note_info = new HashMap<>();
-                note_info.put("note", edt_note.getText().toString());
-                note_info.put("author", edt_author.getText().toString());
-                note_info.put("work", edt_work.getText().toString());
-                note_info.put("createdOn", Long.toString(Instant.now().getEpochSecond()));
+                // Validate
+                if (edt_note.getText().toString().trim().length() > 0)
+                {
+                    // Push note to Firebase
+                    Map<String, String> note_info = new HashMap<>();
+                    note_info.put("note", edt_note.getText().toString());
+                    note_info.put("author", edt_author.getText().toString());
+                    note_info.put("work", edt_work.getText().toString());
+                    note_info.put("createdOn", Long.toString(Instant.now().getEpochSecond()));
 
-                ref.push().setValue(note_info);
+                    ref.push().setValue(note_info);
+
+                    dismiss();
+                }
+                else
+                {
+                    // TODO: Handle no valid note written
+                    Toast.makeText(getContext(), "No note entered!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
+
+        builder.setView(v);
 
         // Create the AlertDialog object and return it
         return builder.create();

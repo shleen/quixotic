@@ -1,7 +1,6 @@
 package com.shleen.quixotic;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
