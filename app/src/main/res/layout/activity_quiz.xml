@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".QuizActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingBottom="150dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_rounds_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginVertical="20dp"
+            app:cardBackgroundColor="@color/colorDarkest"
+            app:cardCornerRadius="10dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:cardBackgroundColor="@color/colorMain"
+                app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:paddingVertical="10dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Widget.MaterialComponents.Button.Icon"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        app:icon="@drawable/ic_question"
+                        app:backgroundTint="@color/colorLightest"
+
+                        app:cornerRadius="30dp"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:insetLeft="0dp"
+                        android:insetRight="0dp"
+                        app:iconTint="@color/colorDarker"
+                        app:iconSize="16dp"
+                        app:iconGravity="textStart"
+                        android:layout_marginEnd="10dp"
+                        android:padding="0dp"
+                        app:iconPadding="0dp"/>
+
+                    <TextView
+                        android:id="@+id/txt_rounds"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1/10"
+                        android:textSize="18sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorLightest"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_rounds_container"
+            android:layout_marginHorizontal="50dp"
+            app:cardBackgroundColor="@color/colorDarkest"
+            app:cardCornerRadius="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    app:cardBackgroundColor="@color/colorMain"
+                    app:cardCornerRadius="10dp">
+
+                    <TextView
+                        android:id="@+id/txt_definition"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="30dp"
+                        android:paddingVertical="10dp"
+                        android:text="Definition here."
+                        android:lineSpacingExtra="10dp"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorLightest"/>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_question"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:paddingVertical="10dp"
+                        android:text="What word does this definition describe?"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorLightest"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:hintEnabled="false"
+                        app:boxBackgroundColor="#00FFFFFF"
+                        android:layout_marginBottom="20dp"
+                        app:boxStrokeWidth="0dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edt_answer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter answer here"
+                            android:textColorHint="@color/colorDarker"
+                            android:paddingVertical="10dp"
+                            android:backgroundTint="#00FFFFFF"
+                            android:textColor="@color/colorLighter"
+                            android:textSize="18sp"
+                            android:maxLines="1"
+                            android:lineSpacingExtra="5dp"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Widget.MaterialComponents.Button.Icon"
+                        android:id="@+id/btn_next"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:layout_marginBottom="20dp"
+                        app:icon="@drawable/ic_next"
+                        app:backgroundTint="@color/colorDarker"
+
+                        app:cornerRadius="30dp"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:insetLeft="0dp"
+                        android:insetRight="0dp"
+                        android:background="@color/colorMain"
+                        app:iconSize="20dp"
+                        app:iconGravity="textStart"
+                        android:padding="0dp"
+                        app:iconPadding="0dp"
+                        android:onClick="contQuiz"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </RelativeLayout>
+
+    <include layout="@layout/bottom_navigation_menu" />
+
+</RelativeLayout>

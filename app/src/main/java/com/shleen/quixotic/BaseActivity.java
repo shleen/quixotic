@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 public class BaseActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,7 @@ public class BaseActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), NotesActivity.class));
                         break;
                     case R.id.quiz:
-                        Toast.makeText(getApplicationContext(), "Quiz. Coming soon!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), QuizLandingActivity.class));
                         break;
                     case R.id.profile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
@@ -52,5 +54,19 @@ public class BaseActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+    public void startQuiz(View v) {
+
+        // TODO: Respond to users without any words
+        if (WordDataHolder.getInstance().getData().size() == 0) {
+            Toast.makeText(getApplicationContext(), "Try adding some words to your collection first!", LENGTH_SHORT).show();
+        } else {
+            Intent i = new Intent(getApplicationContext(), QuizActivity.class);
+            i.putExtra("rounds", 10);
+            startActivity(i);
+
+        }
+
     }
 }

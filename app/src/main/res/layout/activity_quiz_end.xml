@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".QuizEndActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingBottom="150dp"
+        android:paddingHorizontal="20dp">
+
+        <LinearLayout
+            android:id="@+id/lyt_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:backgroundTint="@color/colorDarkest"
+            android:background="@drawable/points_shape"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:id="@+id/txt_points_caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:layout_marginLeft="10dp"
+                android:text="+P"
+                android:textSize="24sp"
+                android:textColor="@color/colorDarkest"
+                android:backgroundTint="@color/colorLightest"
+                android:background="@drawable/points_shape"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/txt_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="2dp"
+                android:text="0"
+                android:textSize="24sp"
+                android:textColor="@color/colorLightest"/>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/txt_congratulations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lyt_points"
+            android:layout_margin="10dp"
+            android:text="Congratulations!️"
+            android:textSize="36sp"
+            android:textColor="@color/colorDarkest"/>
+
+        <TextView
+            android:id="@+id/txt_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_congratulations"
+            android:layout_marginHorizontal="10dp"
+            android:text="You got 0 out of 10 questions correct."
+            android:textSize="20sp"
+            android:textColor="@color/colorDarkest"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_play_again"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_score"
+            android:text="Play Again"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:onClick="startQuiz"/>
+
+    </RelativeLayout>
+
+    <include layout="@layout/bottom_navigation_menu" />
+
+</RelativeLayout>
