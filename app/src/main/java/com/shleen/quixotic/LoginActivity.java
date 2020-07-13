@@ -6,13 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.Task;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     Typeface BUTLER_REG;
     Typeface BUTLER_MED;
@@ -55,15 +57,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             findViewById(R.id.sign_in_button).setOnClickListener(this);
         }
-        updateUI(account);
-
+        else updateUI(account);
     }
 
     private void updateUI(GoogleSignInAccount acc)
     {
         if (acc != null) {
             // Existing sign-in found. Redirect to home page.
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            Intent i = new Intent(getApplicationContext(), BaseActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
         }
@@ -91,7 +92,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                 updateUI(task.getResult());
             } catch (Exception ignored) { }
-
         }
     }
 

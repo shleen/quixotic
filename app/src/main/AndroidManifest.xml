@@ -9,36 +9,41 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".QuizEndActivity"></activity>
         <activity
-            android:name=".HomeActivity"
+            android:name=".BaseActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".HomeFragment"
             android:screenOrientation="locked" />
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".MainFragment"
             android:screenOrientation="locked" />
         <activity
-            android:name=".NotesActivity"
+            android:name=".NotesFragment"
             android:screenOrientation="locked" />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".ProfileFragment"
             android:screenOrientation="locked" />
         <activity
-            android:name=".QuizActivity"
+            android:name=".QuizFragment"
             android:screenOrientation="locked" />
         <activity
-            android:name=".QuizLandingActivity"
+            android:name=".QuizEndFragment"
             android:screenOrientation="locked" />
         <activity
-            android:name=".WordActivity"
+            android:name=".QuizLandingFragment"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".WordFragment"
             android:screenOrientation="locked" />
     </application>
 

@@ -1,26 +1,38 @@
 package com.shleen.quixotic;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class NotesActivity extends BaseActivity {
+public class NotesFragment extends Fragment {
 
     List<Note> notes;
 
     RecyclerView rcl_notes;
     NoteListAdaptor noteListAdaptor;
 
+
+    View view;
+
+    public NotesFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notes);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        this.view = inflater.inflate(R.layout.fragment_notes, container, false);
 
         // Set up recyclerview
-        rcl_notes = findViewById(R.id.rcl_notes);
+        rcl_notes = view.findViewById(R.id.rcl_notes);
 
         rcl_notes.setHasFixedSize(true);
 
@@ -31,13 +43,12 @@ public class NotesActivity extends BaseActivity {
 
         rcl_notes.setAdapter(noteListAdaptor);
 
-        // Set nav listeners
-        setNavListeners();
+        return view;
     }
 
     public void openAddNoteDialog(View v) {
         AddNoteDialog addNoteDialog = new AddNoteDialog();
-        addNoteDialog.show(getSupportFragmentManager(), "addNoteDialog");
+        addNoteDialog.show(getFragmentManager(), "addNoteDialog");
     }
 
 }

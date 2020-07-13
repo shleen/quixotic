@@ -3,6 +3,7 @@ package com.shleen.quixotic;
 import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
+
 import android.view.View;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -27,7 +28,7 @@ class WordDataHolder {
 
     private GoogleSignInAccount user;
 
-    WordDataHolder(Context c) {
+    WordDataHolder(final Context c) {
 
         user = GoogleSignIn.getLastSignedInAccount(c);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -36,13 +37,8 @@ class WordDataHolder {
         wordListAdaptor = new WordListAdaptor(words, new onWordClickListener() {
             @Override
             public void onWordClicked(View v, int position) {
-
                 // Navigate to word-specific page
-                Intent i = new Intent(v.getContext(), WordActivity.class);
-                i.putExtra("WORD", words.get(position));
-
-                v.getContext().startActivity(i);
-
+                ((BaseActivity) c).goToWord(words.get(position));
             }
         }, c);
     }
@@ -55,7 +51,6 @@ class WordDataHolder {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 words.clear();
-
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     // Create array of definitions
                     ArrayList<Definition> definitions = new ArrayList<>();

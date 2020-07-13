@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileActivity">
+    tools:context=".ProfileFragment">
 
     <ImageView
         android:id="@+id/img_user"
@@ -19,10 +19,7 @@
         android:layout_height="wrap_content"
         android:text="Sign out"
         android:textAlignment="center"
-        android:onClick="attemptSignOut"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_below="@id/img_user"/>
 
-    <include layout="@layout/bottom_navigation_menu" />
-
-</RelativeLayout>
+</FrameLayout>
