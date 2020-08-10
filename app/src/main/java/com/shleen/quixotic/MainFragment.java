@@ -5,16 +5,20 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,17 +40,19 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends BaseActivity {
+public class MainFragment extends Fragment {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref;
 
     EditText edt_add;
+    MaterialButton btn_add;
 
     Typeface BUTLER_REG;
     TextView txt_word_count;
     TextView txt_user_name;
 
+    private WordListAdaptor wordListAdaptor;
     List<Word> words;
 
     static boolean sort_alphabetically = false;
@@ -55,19 +61,20 @@ public class MainActivity extends BaseActivity {
 
     static GoogleSignInAccount user = null;
 
+    View view;
+
+    public MainFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-        // Initialize WordDataHolder
-        WordDataHolder.setInstance(new WordDataHolder(this));
-
-        // Initialize NoteDataHolder
-        NoteDataHolder.setInstance(new NoteDataHolder(this));
+        this.view = inflater.inflate(R.layout.fragment_main, container, false);
 
         // Get signed-in user
-        user = GoogleSignIn.getLastSignedInAccount(this);
+        user = GoogleSignIn.getLastSignedInAccount(view.getContext());
 
         // Get reference to user's words
         ref = database.getReference(String.format("%s/words", user.getEmail().replaceAll("[^a-zA-Z0-9]", "")));
@@ -86,16 +93,16 @@ public class MainActivity extends BaseActivity {
         });
 
         // Set typeface for txt_word_count & txt_user_name
-        BUTLER_REG = Typeface.createFromAsset(getAssets(), "fonts/Butler_Regular.ttf");
-        txt_word_count = (TextView) findViewById(R.id.txt_word_count);
+        BUTLER_REG = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/Butler_Regular.ttf");
+        txt_word_count = (TextView) view.findViewById(R.id.txt_word_count);
         txt_word_count.setTypeface(BUTLER_REG);
 
         // Set user name
-        txt_user_name = (TextView) findViewById(R.id.txt_user_name);
+        txt_user_name = (TextView) view.findViewById(R.id.txt_user_name);
         txt_user_name.setTypeface(BUTLER_REG);
         txt_user_name.setText( String.format("Hello, %s.", user.getDisplayName()));
 
-        edt_add = (EditText) findViewById(R.id.edt_add);
+        edt_add = (EditText) view.findViewById(R.id.edt_add);
 
         // Set typeface for edt_add
         edt_add.setTypeface(BUTLER_REG);
@@ -109,27 +116,21 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        // Pre-load words
-        WordDataHolder.getInstance().setData();
-        words = WordDataHolder.getInstance().getData();
+        wordListAdaptor = WordDataHolder.getInstance().getWordListAdaptor();
+        words = wordListAdaptor.getWords();
 
-        // Pre-load notes
-        NoteDataHolder.getInstance().setData();
+        btn_add = (MaterialButton) view.findViewById(R.id.btn_add);
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addWord(v);
+            }
+        });
 
         // Initialize gson
         gson = new Gson();
 
-        // Set nav listeners
-        setNavListeners();
-
-        // Deselect nav items
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.false_add);
-    }
-
-    public void goToWords(View v) {
-        Intent i = new Intent(this, HomeActivity.class);
-        startActivity(i);
+        return view;
     }
 
     public void addWord(final View v) {
@@ -144,13 +145,14 @@ public class MainActivity extends BaseActivity {
         Util u = new Util();
         if (u.getWords(words).contains(word)) {
             // Word already exists. Alert user, then redirect to the request word's page.
-            Toast.makeText(getApplicationContext(),word + " has already been added.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(),word + " has already been added.",Toast.LENGTH_SHORT).show();
 
             // Navigate to word-specific page
-            Intent i = new Intent(v.getContext(), WordActivity.class);
-            i.putExtra("WORD", words.get(u.getWord(word, words)));
-
-            v.getContext().startActivity(i);
+            ((BaseActivity) getActivity()).goToWord(words.get(u.getWord(word, words)));
+//            Intent i = new Intent(v.getContext(), WordActivity.class);
+//            i.putExtra("WORD", words.get(u.getWord(word, words)));
+//
+//            v.getContext().startActivity(i);
         }
         else {
 
@@ -208,12 +210,12 @@ public class MainActivity extends BaseActivity {
                                     con.disconnect();
 
                                     // Redirect to HomeActivity
-                                    goToWords(v);
+                                    ((BaseActivity)getActivity()).goToWords(v);
                                 }
                                 catch (IOException e) {
                                     // TODO: Handle IOException
                                     NoResultDialog noResultDialog = new NoResultDialog();
-                                    noResultDialog.showNoResultDialog(getSupportFragmentManager(), "noResultDialog", word);
+                                    noResultDialog.showNoResultDialog(getFragmentManager(), "noResultDialog", word);
                                 }
                             }
                         });

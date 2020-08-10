@@ -1,13 +1,15 @@
 package com.shleen.quixotic;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -18,15 +20,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class QuizActivity extends BaseActivity {
+public class QuizFragment extends Fragment {
 
     int points = 0;
-
-    private int rounds;
-    List<Word> selectedWords;
+    int rounds = 10;
+    List<Word> selectedWords = new ArrayList<Word>() {};
 
     TextView txt_rounds;
     TextView txt_definition;
@@ -39,40 +41,55 @@ public class QuizActivity extends BaseActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref;
 
+    View view;
+
+    public QuizFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_quiz);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        this.view = inflater.inflate(R.layout.fragment_quiz, container, false);
 
         // Get number of rounds as needed
-        rounds = getIntent().getIntExtra("rounds", 10);
+        if (getArguments()  != null) rounds = getArguments().getInt("rounds", 10);
 
-        BUTLER_MED = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Butler_Medium.ttf");
-        BUTLER_REG = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Butler_Regular.ttf");
+        BUTLER_MED = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/Butler_Medium.ttf");
+        BUTLER_REG = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/Butler_Regular.ttf");
 
-        txt_rounds = (TextView) findViewById(R.id.txt_rounds);
-        txt_definition = (TextView) findViewById(R.id.txt_definition);
-        txt_question = (TextView) findViewById(R.id.txt_question);
-        edt_answer = (TextInputEditText) findViewById(R.id.edt_answer);
+        txt_rounds = (TextView) view.findViewById(R.id.txt_rounds);
+        txt_definition = (TextView) view.findViewById(R.id.txt_definition);
+        txt_question = (TextView) view.findViewById(R.id.txt_question);
+        edt_answer = (TextInputEditText) view.findViewById(R.id.edt_answer);
 
         txt_rounds.setTypeface(BUTLER_MED);
         txt_definition.setTypeface(BUTLER_REG);
         txt_question.setTypeface(BUTLER_REG);
         edt_answer.setTypeface(BUTLER_REG);
 
-        startQuiz();
-
-        // Set nav listeners
-        setNavListeners();
-
         // Get signed-in user
-        GoogleSignInAccount user = GoogleSignIn.getLastSignedInAccount(this);
+        GoogleSignInAccount user = GoogleSignIn.getLastSignedInAccount(view.getContext());
 
         // Get reference to user's words
         ref = database.getReference(user.getEmail().replaceAll("[^a-zA-Z0-9]", ""));
+
+        return view;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        if (!hidden) { startQuiz(); }
+
     }
 
     public void startQuiz() {
+
+        // Update rounds
+        txt_rounds.setText(String.format("%d/%d", rounds-selectedWords.size()+1, rounds));
 
         // Get words
         List<Word> words = WordDataHolder.getInstance().getData();
@@ -87,7 +104,7 @@ public class QuizActivity extends BaseActivity {
 
     }
 
-    public void contQuiz(View v) {
+    public boolean contQuiz(View v) {
 
         // Check answer
         if (edt_answer.getText().toString().equals(selectedWords.get(0).getWord())) {
@@ -95,10 +112,10 @@ public class QuizActivity extends BaseActivity {
             points += 10;
 
             // Display message
-            Toast.makeText(getApplicationContext(), "Correct!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), "Correct!", Toast.LENGTH_SHORT).show();
         } else {
             // Display message
-            Toast.makeText(getApplicationContext(), String.format("Wrong :( The answer: %s", selectedWords.get(0).getWord()), Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), String.format("Wrong :( The answer: %s", selectedWords.get(0).getWord()), Toast.LENGTH_SHORT).show();
         }
 
         // Check if quiz is over & proceed as needed
@@ -134,13 +151,10 @@ public class QuizActivity extends BaseActivity {
                 }
             });
 
-            // Navigate to quiz end activity
-            Intent i = new Intent(getApplicationContext(), QuizEndActivity.class);
-            i.putExtra("points", points);
-            i.putExtra("rounds", rounds);
-            startActivity(i);
+            // Return true to signal end of quiz
+            return true;
 
         }
-
+        return false;
     }
 }

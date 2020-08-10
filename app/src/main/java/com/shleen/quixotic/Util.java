@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.shleen.quixotic.MainActivity.sort_alphabetically;
+import static com.shleen.quixotic.MainFragment.sort_alphabetically;
 
 class Util {
 
