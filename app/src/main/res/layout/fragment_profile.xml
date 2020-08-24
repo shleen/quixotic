@@ -8,6 +8,15 @@
     tools:context=".ProfileFragment">
 
     <ImageView
+        android:id="@+id/img_ad"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:src="@drawable/heart" />
+
+    <ImageView
         android:id="@+id/img_user"
         android:layout_width="200dp"
         android:layout_height="200dp"

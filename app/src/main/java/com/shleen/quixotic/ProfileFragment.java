@@ -22,6 +22,7 @@ public class ProfileFragment extends Fragment {
 
     GoogleSignInClient mGoogleSignInClient;
 
+    ImageView img_ad;
     ImageView img_user;
     MaterialButton btn_logout;
 
@@ -65,6 +66,15 @@ public class ProfileFragment extends Fragment {
                         startActivity(i);
                     }
                 });
+            }
+        });
+
+        img_ad = view.findViewById(R.id.img_ad);
+        img_ad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdDialog adDialog = new AdDialog();
+                adDialog.show(getFragmentManager(), "adDialog");
             }
         });
 
