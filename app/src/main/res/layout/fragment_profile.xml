@@ -7,28 +7,119 @@
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
 
-    <ImageView
-        android:id="@+id/img_ad"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="end"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="30dp"
-        android:src="@drawable/heart" />
-
-    <ImageView
-        android:id="@+id/img_user"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:gravity="center_horizontal" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_logout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sign out"
-        android:textAlignment="center"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_below="@id/img_user"/>
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/img_ad"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/heart" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/img_user_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="150dp"
+            app:cardCornerRadius="20dp"
+            app:cardPreventCornerOverlap="false">
+
+            <ImageView
+                android:id="@+id/img_user"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:gravity="center_horizontal" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/txt_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/img_user_wrapper"
+            android:textAlignment="center"
+            android:layout_marginTop="20dp"
+            android:textSize="26sp"
+            android:textColor="@color/colorDarker"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_below="@id/txt_name">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_marginEnd="20dp">
+
+                <TextView
+                    android:id="@+id/txt_word_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30sp"
+                    android:textColor="@color/colorDarkest"
+                    android:textAlignment="center"/>
+
+                <TextView
+                    android:id="@+id/txt_word_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="words"
+                    android:textColor="@color/colorDarkest"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_marginStart="20dp">
+
+                <TextView
+                    android:id="@+id/txt_points_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30sp"
+                    android:textColor="@color/colorDarkest"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/txt_points_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="points"
+                    android:textColor="@color/colorDarkest"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_out"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp"
+            android:textColor="#D52525"
+            android:textAllCaps="false"
+            app:rippleColor="@color/transparent"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+    </RelativeLayout>
+
 
 </FrameLayout>
