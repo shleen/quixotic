@@ -117,9 +117,9 @@ public class BaseActivity extends AppCompatActivity {
 
     public void startQuiz(View v) {
 
-        // TODO: Respond to users without any words
-        if (WordDataHolder.getInstance().getData().size() == 0) {
-            Toast.makeText(getApplicationContext(), "Try adding some words to your collection first!", LENGTH_SHORT).show();
+        // TODO: Respond to users with < 10 words saved
+        if (WordDataHolder.getInstance().getData().size() < 10) {
+            Toast.makeText(getApplicationContext(), "Looks like you have less than 10 words saved. Try adding some more then trying again.", Toast.LENGTH_LONG).show();
         } else {
 
             Bundle bundle = new Bundle();

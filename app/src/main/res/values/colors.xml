@@ -13,5 +13,8 @@
 
     <color name="colorLightGrey">#9B9891</color>
 
+    <color name="green">#A4FF31</color>
+    <color name="red">#D52525</color>
+
     <color name="transparent">#00FFFFFF</color>
 </resources>
