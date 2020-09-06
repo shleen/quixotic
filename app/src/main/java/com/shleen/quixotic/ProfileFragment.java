@@ -20,6 +20,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Optional;
+
 public class ProfileFragment extends Fragment {
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -97,7 +99,7 @@ public class ProfileFragment extends Fragment {
                 .addValueEventListener(new ValueEventListener() {
                        @Override
                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                           txt_points_count.setText(dataSnapshot.getValue().toString());
+                           txt_points_count.setText(Optional.ofNullable(dataSnapshot.getValue()).orElse("0").toString());
                        }
 
                        @Override
