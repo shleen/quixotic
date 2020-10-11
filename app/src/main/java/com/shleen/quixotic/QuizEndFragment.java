@@ -1,5 +1,6 @@
 package com.shleen.quixotic;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,8 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.button.MaterialButton;
 
 public class QuizEndFragment extends Fragment {
@@ -25,14 +29,24 @@ public class QuizEndFragment extends Fragment {
 
     View view;
 
+    InterstitialAd ad;
+
     public QuizEndFragment() {
         // Required empty public constructor
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        ad = new InterstitialAd(context);
+        ad.setAdUnitId(getString(R.string.ad_unit_id));
+        ad.loadAd(new AdRequest.Builder().build());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         this.view = inflater.inflate(R.layout.fragment_quiz_end, container, false);
 
         BUTLER_REG = Typeface.createFromAsset(view.getContext().getAssets(), "fonts/Butler_Regular.ttf");
@@ -59,9 +73,9 @@ public class QuizEndFragment extends Fragment {
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-
         if (!hidden) {
+            if (ad.isLoaded()) ad.show();
+
             txt_points.setText(Integer.toString(getArguments().getInt("points")));
             if (getArguments().getInt("points") == 0) {
                 txt_congratulations.setText("Oh no :(");
@@ -70,5 +84,7 @@ public class QuizEndFragment extends Fragment {
             }
             txt_score.setText(String.format("You got %d out of %d questions correct.", getArguments().getInt("points")/10, getArguments().getInt("rounds")));
         }
+
+        super.onHiddenChanged(hidden);
     }
 }

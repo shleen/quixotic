@@ -100,7 +100,7 @@ public class AdDialog extends DialogFragment {
         });
 
         ad = new InterstitialAd(getContext());
-        ad.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        ad.setAdUnitId(getString(R.string.ad_unit_id));
         ad.loadAd(new AdRequest.Builder().build());
 
         // Create the AlertDialog object and return it
