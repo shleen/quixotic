@@ -2,7 +2,6 @@ package com.shleen.quixotic;
 
 import androidx.annotation.NonNull;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,6 @@ import java.util.Collections;
 import java.util.List;
 
 import in.myinnos.alphabetsindexfastscrollrecycler.IndexFastScrollRecyclerView;
-
-import static com.shleen.quixotic.MainFragment.sort_alphabetically;
 
 public class HomeFragment extends Fragment {
 
@@ -65,10 +62,11 @@ public class HomeFragment extends Fragment {
         toggle_sort.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
             @Override
             public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
-
                 if (isChecked) {
+                    boolean sort_alphabetically = (checkedId==R.id.btn_sort_alphabetically);
+
                     // Sort words
-                    words = new Util().sortWords(words);
+                    words = new Util().sortWords(words, sort_alphabetically);
 
                     // Update recycler view
                     wordListAdaptor.setWords(words);
@@ -78,7 +76,6 @@ public class HomeFragment extends Fragment {
                     // Toggle visibility of the index bar
                     recyclerView.setIndexBarVisibility(sort_alphabetically);
                 }
-
             }
         });
 

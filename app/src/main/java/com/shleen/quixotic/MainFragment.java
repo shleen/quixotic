@@ -55,8 +55,6 @@ public class MainFragment extends Fragment {
     private WordListAdaptor wordListAdaptor;
     List<Word> words;
 
-    static boolean sort_alphabetically = false;
-
     Gson gson;
 
     static GoogleSignInAccount user = null;

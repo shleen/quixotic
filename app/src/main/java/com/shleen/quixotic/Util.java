@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.shleen.quixotic.MainFragment.sort_alphabetically;
-
 class Util {
 
     Util() { }
@@ -31,18 +29,9 @@ class Util {
         return out;
     }
 
-    // Sorts the given list of words as indicated by the sort_alphabetically static flag
-    List<Word> sortWords(List<Word> words) {
-        if (sort_alphabetically) {
-            // Sort alphabetically
-            Collections.sort(words, new AddedSorter());
-            sort_alphabetically = false;
-        } else {
-            // Sort by recently added
-            Collections.sort(words, new WordSorter());
-            sort_alphabetically = true;
-        }
-
+    // Sorts the given list of words as indicated by the sort_alphabetically param
+    List<Word> sortWords(List<Word> words, boolean sort_alphabetically) {
+        Collections.sort(words, (sort_alphabetically ? new WordSorter() : new AddedSorter()));
         return words;
     }
 
